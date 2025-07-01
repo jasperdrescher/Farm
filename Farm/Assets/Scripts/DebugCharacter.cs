@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// unused - todo: remove
+
 public class DebugCharacter : MonoBehaviour
 {
 	public MapGrid Grid;

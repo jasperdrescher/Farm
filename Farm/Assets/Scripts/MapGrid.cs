@@ -21,8 +21,13 @@ public class MapGrid : MonoBehaviour
 		Cleanup();
 		GenerateGrid();
 	}
-	
-    void Update()
+
+	private void OnDestroy()
+	{
+		Cleanup();
+	}
+
+	void Update()
     {
 #if UNITY_EDITOR
 		if(Application.isPlaying == false)
@@ -61,23 +66,24 @@ public class MapGrid : MonoBehaviour
 			for (int j = 0; j < GridSize.y; j++)
 			{
 				Vector2 TilePos = new Vector2(p.x + i * TileSize.x, p.z + j * TileSize.y);
+				
 				MapTile MT = CreateTileAt(TilePos);
 
-				if(DebugSpawnCrop)
+#if UNITY_EDITOR
+				if (DebugSpawnCrop)
 					MT.PlantCrop(CropRegistryPrefab.GetCropByType(Crop.ECropType.Potato));
+#endif
 			}
 		}
 	}
 
 	private MapTile CreateTileAt(Vector2 Pos)
 	{
-		GameObject Tile = new GameObject();
-		Tile.name = "MapTile";
-		Tile.transform.parent = transform;
+		GameObject Tile = Instantiate(TileRegistryPrefab.GrassTile, transform);
 		Tile.transform.position = new Vector3(Pos.x, 0.0f, Pos.y);
 
-		MapTile MT = Tile.AddComponent<MapTile>();
-		MT.Init();
+		MapTile MT = Tile.GetComponent<MapTile>();
+		//MT.Init();
 		return MT;
 	}
 
