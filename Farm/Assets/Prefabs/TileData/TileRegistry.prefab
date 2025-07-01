@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GrassTile: {fileID: 1437242426805090903, guid: 2642a0ba6c8fb3842b30d2f9e7c877b2, type: 3}
-  CropFieldTile: {fileID: 1787263219254001300, guid: c7c54066debef28409bc2fe39152fe52, type: 3}
+  CropFieldTile: {fileID: 1787263219254001300, guid: 0f9f100412d41914480efc59e4ead56a, type: 3}
