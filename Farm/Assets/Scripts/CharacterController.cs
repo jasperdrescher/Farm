@@ -58,4 +58,15 @@ public class CharacterController : MonoBehaviour
         currentSprintSpeed = SprintSpeedMultiplier;
         animator.speed = currentSprintSpeed;
     }
+
+    public void InputAttack(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.canceled)
+        {
+            animator.SetBool("IsAttacking", false);
+            return;
+        }
+
+        animator.SetBool("IsAttacking", true);
+    }
 }
