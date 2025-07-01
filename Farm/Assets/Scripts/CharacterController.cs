@@ -25,10 +25,8 @@ public class CharacterController : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            Debug.Log(playerRotation);
             transform.rotation = playerRotation;
-            var translation = moveDirection * (moveSpeed * Time.deltaTime);
-            transform.Translate(translation);
+            transform.position += transform.forward * moveSpeed * Time.deltaTime;
         }
     }
 
@@ -43,7 +41,6 @@ public class CharacterController : MonoBehaviour
 
         animator.SetBool("IsWalking", true);
         Vector2 input = callbackContext.ReadValue<Vector2>();
-        Debug.Log(input);
         moveDirection = new Vector3(input.x * -1.0f, 0.0f, input.y);
     }
 }
