@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     private Vector3 rotation = new Vector3(50f, 180f, 0f);
 
     private Transform playerTransform;
+    private Quaternion fixedRotation;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,8 +23,7 @@ public class CameraController : MonoBehaviour
             Debug.LogError("Failed to find player");
         }
 
-        Quaternion fixedRotation = Quaternion.Euler(rotation);
-        transform.rotation = fixedRotation;
+        fixedRotation = Quaternion.Euler(rotation);
     }
 
     void LateUpdate()
@@ -33,6 +33,6 @@ public class CameraController : MonoBehaviour
 
         Vector3 desiredPosition = playerTransform.position + offset;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        transform.LookAt(playerTransform);
+        transform.rotation = fixedRotation;
     }
 }
