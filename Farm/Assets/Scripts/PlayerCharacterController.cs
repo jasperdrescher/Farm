@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CharacterController : MonoBehaviour
+public class PlayerCharacterController : MonoBehaviour
 {
     public float rotationSpeed = 10f;
     public float moveSpeed = 4f;
