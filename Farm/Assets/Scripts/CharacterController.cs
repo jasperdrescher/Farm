@@ -5,19 +5,19 @@ public class CharacterController : MonoBehaviour
 {
     public float rotationSpeed = 10f;
     public float moveSpeed = 4f;
-    public float SprintSpeedMultiplier = 1.5f;
+    public float RunSpeedMultiplier = 1.5f;
 
     [SerializeField]
     private Vector3 moveDirection;
 
     private Animator animator;
-    private float currentSprintSpeed;
+    private float currentRunSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animator = GetComponent<Animator>();
-        currentSprintSpeed = 1f;
+        currentRunSpeed = 1f;
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class CharacterController : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = playerRotation;
-            transform.position += transform.forward * ((moveSpeed * currentSprintSpeed) * Time.deltaTime);
+            transform.position += transform.forward * ((moveSpeed * currentRunSpeed) * Time.deltaTime);
         }
     }
 
@@ -46,17 +46,19 @@ public class CharacterController : MonoBehaviour
         moveDirection = new Vector3(input.x * -1f, 0f, input.y * -1f);
     }
 
-    public void InputSprint(InputAction.CallbackContext callbackContext)
+    public void InputRun(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.canceled)
         {
-            currentSprintSpeed = 1f;
-            animator.speed = currentSprintSpeed;
+            animator.SetBool("IsRunning", false);
+            currentRunSpeed = 1f;
+            animator.speed = currentRunSpeed;
             return;
         }
 
-        currentSprintSpeed = SprintSpeedMultiplier;
-        animator.speed = currentSprintSpeed;
+        animator.SetBool("IsRunning", true);
+        currentRunSpeed = RunSpeedMultiplier;
+        animator.speed = currentRunSpeed;
     }
 
     public void InputAttack(InputAction.CallbackContext callbackContext)
