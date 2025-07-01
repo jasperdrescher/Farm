@@ -62,6 +62,7 @@ public class MapTile : MonoBehaviour
 		if (TileAsset != null)
 		{
 			TileAssetInstance = Instantiate(TileAsset, transform);
+			TileAssetInstance.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		}
 	}
 

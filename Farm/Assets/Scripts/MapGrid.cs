@@ -18,14 +18,18 @@ public class MapGrid : MonoBehaviour
 
     void Start()
     {
+		Cleanup();
 		GenerateGrid();
 	}
 	
     void Update()
     {
+#if UNITY_EDITOR
 		HandleEnabledState();
+#endif
 	}
 
+#if UNITY_EDITOR
 	// debug stuff
 	void HandleEnabledState()
 	{
@@ -43,6 +47,7 @@ public class MapGrid : MonoBehaviour
 			Cleanup();
 		}
 	}
+#endif
 
 	public void GenerateGrid()
 	{
