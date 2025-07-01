@@ -51,9 +51,11 @@ public class CharacterController : MonoBehaviour
         if (callbackContext.canceled)
         {
             currentSprintSpeed = 1f;
+            animator.speed = currentSprintSpeed;
             return;
         }
 
         currentSprintSpeed = SprintSpeedMultiplier;
+        animator.speed = currentSprintSpeed;
     }
 }
