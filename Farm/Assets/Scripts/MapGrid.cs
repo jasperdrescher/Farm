@@ -25,7 +25,8 @@ public class MapGrid : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-		HandleEnabledState();
+		if(Application.isPlaying == false)
+			HandleEnabledState();
 #endif
 	}
 
