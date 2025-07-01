@@ -10,6 +10,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private Vector3 moveDirection;
 
+    [SerializeField]
+    private float runAnimSpeed = 0.8f;
+
     private Animator animator;
     private float currentRunSpeed;
 
@@ -52,13 +55,13 @@ public class CharacterController : MonoBehaviour
         {
             animator.SetBool("IsRunning", false);
             currentRunSpeed = 1f;
-            animator.speed = currentRunSpeed;
+            animator.speed = 1f;
             return;
         }
 
         animator.SetBool("IsRunning", true);
         currentRunSpeed = RunSpeedMultiplier;
-        animator.speed = currentRunSpeed;
+        animator.speed = runAnimSpeed;
     }
 
     public void InputAttack(InputAction.CallbackContext callbackContext)
