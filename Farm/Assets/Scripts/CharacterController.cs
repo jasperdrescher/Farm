@@ -1,15 +1,14 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class CharacterController : MonoBehaviour
 {
-    public float rotationSpeed = 10.0f;
-    public float moveSpeed = 5.0f;
+    public float rotationSpeed = 10f;
+    public float moveSpeed = 5f;
 
     [SerializeField]
     private Vector3 moveDirection;
+
     private Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,6 +40,6 @@ public class CharacterController : MonoBehaviour
 
         animator.SetBool("IsWalking", true);
         Vector2 input = callbackContext.ReadValue<Vector2>();
-        moveDirection = new Vector3(input.x * -1.0f, 0.0f, input.y);
+        moveDirection = new Vector3(input.x * -1f, 0f, input.y * -1f);
     }
 }

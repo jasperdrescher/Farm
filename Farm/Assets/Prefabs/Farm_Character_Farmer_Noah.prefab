@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Farm_Character_Farmer_Noah
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 14f3b3954a8e4e44da54f63f1bc35a7a, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2856352371326370935, guid: 14f3b3954a8e4e44da54f63f1bc35a7a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
