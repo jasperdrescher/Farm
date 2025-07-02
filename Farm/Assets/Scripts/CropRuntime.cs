@@ -52,7 +52,7 @@ public class CropRuntime : MonoBehaviour
 			GameObject.DestroyImmediate(CurrentVisual);
 
 		CurrentVisual = Instantiate(CropData.CropGrowSteps[CurrentStep], transform);
-		CurrentVisual.transform.position = transform.position + new Vector3(0, OwnerTile.TileHeight, 0);
+		//CurrentVisual.transform.position = transform.position + new Vector3(0, OwnerTile.TileHeight, 0);
 	}
 
 	public void Interact()

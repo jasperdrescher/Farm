@@ -1,50 +1,39 @@
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using static UnityEditor.PlayerSettings;
 
 [ExecuteInEditMode]
 public class MapGrid : MonoBehaviour
 {
 	[Header("Setup")]
-	public CropRegistry CropRegistryPrefab;
-	public TileRegistry TileRegistryPrefab;
+	public GameObject TilePrefab;
 
 	public Vector2 GridSize;
 	public Vector2 TileSize;
 
-	[Header("Debug")]
-	public bool Enabled = true;
-	public bool DebugSpawnCrop = false;
-	bool EnabledInternal = false;
+	[Header("Editor")]
+	public bool EditorGenerateGrid = false;
 
-    void Start()
+	void Start()
     {
-		Cleanup();
-		GenerateGrid();
-	}
-
-	private void OnDestroy()
-	{
-		Cleanup();
 	}
 
 	void Update()
     {
 #if UNITY_EDITOR
 		if(Application.isPlaying == false)
-			HandleEnabledState();
+			HandleEditorGridGeneration();
 #endif
 	}
 
 #if UNITY_EDITOR
-	// debug stuff
-	void HandleEnabledState()
+	// editor stuff
+	void HandleEditorGridGeneration()
 	{
-		if (Enabled == EnabledInternal)
+		if (transform.childCount > 0 && EditorGenerateGrid)
 			return;
 
-		EnabledInternal = Enabled;
-
-		if (Enabled)
+		if (EditorGenerateGrid)
 		{
 			GenerateGrid();
 		}
@@ -65,26 +54,10 @@ public class MapGrid : MonoBehaviour
 		{
 			for (int j = 0; j < GridSize.y; j++)
 			{
-				Vector2 TilePos = new Vector2(p.x + i * TileSize.x, p.z + j * TileSize.y);
-				
-				MapTile MT = CreateTileAt(TilePos);
-
-#if UNITY_EDITOR
-				if (DebugSpawnCrop)
-					MT.PlantCrop(CropRegistryPrefab.GetCropByType(Crop.ECropType.Potato));
-#endif
+				GameObject Tile = Instantiate(TilePrefab, transform);
+				Tile.transform.position = new Vector3(p.x + i * TileSize.x, 0.0f, p.z + j * TileSize.y);
 			}
 		}
-	}
-
-	private MapTile CreateTileAt(Vector2 Pos)
-	{
-		GameObject Tile = Instantiate(TileRegistryPrefab.GrassTile, transform);
-		Tile.transform.position = new Vector3(Pos.x, 0.0f, Pos.y);
-
-		MapTile MT = Tile.GetComponent<MapTile>();
-		//MT.Init();
-		return MT;
 	}
 
 	public void Cleanup()
