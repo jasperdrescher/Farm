@@ -114,10 +114,10 @@ PrefabInstance:
       addedObject: {fileID: 1607335057638982851}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7180680818099289907}
+      addedObject: {fileID: 7986891340690510551}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7986891340690510551}
+      addedObject: {fileID: 7180680818099289907}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1338947933482950525}
@@ -169,6 +169,25 @@ MonoBehaviour:
   RunSpeedMultiplier: 1.5
   moveDirection: {x: 0, y: 0, z: 0}
   runAnimSpeed: 0.8
+--- !u!114 &7986891340690510551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923777212302239529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3b9eac8ee4dc446acd78d728f87550, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTool: 0
+  ToolDataObjects:
+  - {fileID: 11400000, guid: 72b750273bbf74a4484a0a2b70ae2cfd, type: 2}
+  - {fileID: 11400000, guid: c69f20168d0748743b4c94bc53d70099, type: 2}
+  - {fileID: 11400000, guid: 03050ac3ed6b0f646a75c0035b8ffb05, type: 2}
+  - {fileID: 11400000, guid: 0706ee64ee32f14498bb4039e5fc2bb4, type: 2}
+  - {fileID: 11400000, guid: f4f3dda4720a5d648b72e9bf003045ce, type: 2}
 --- !u!114 &7180680818099289907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,11 +254,35 @@ MonoBehaviour:
     m_ActionId: 852140f2-7766-474d-8707-702459ba45f3
     m_ActionName: 'Player/Interact[/Keyboard/e]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7986891340690510551}
+        m_TargetAssemblyTypeName: PlayerInventory, Assembly-CSharp
+        m_MethodName: InputPrevious
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2776c80d-3c14-4091-8c56-d04ced07a2b0
     m_ActionName: 'Player/Previous[/Keyboard/1]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7986891340690510551}
+        m_TargetAssemblyTypeName: PlayerInventory, Assembly-CSharp
+        m_MethodName: InputNext
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba
     m_ActionName: 'Player/Next[/Keyboard/2]'
   - m_PersistentCalls:
@@ -303,21 +346,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7986891340690510551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1923777212302239529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc3b9eac8ee4dc446acd78d728f87550, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentTool: 0
-  ToolDataObjects:
-  - {fileID: 11400000, guid: 72b750273bbf74a4484a0a2b70ae2cfd, type: 2}
 --- !u!136 &1338947933482950525
 CapsuleCollider:
   m_ObjectHideFlags: 0

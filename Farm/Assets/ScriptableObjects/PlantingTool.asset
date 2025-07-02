@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67778e39c1b42c14ba4089ade47eb847, type: 3}
+  m_Name: PlantingTool
+  m_EditorClassIdentifier: 
+  tool: 5
+  prefab: {fileID: 7301850615850235150, guid: c4c2aaced210d764795bf8975842769a, type: 3}
