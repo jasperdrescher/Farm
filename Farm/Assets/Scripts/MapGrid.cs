@@ -29,11 +29,24 @@ public class MapGrid : MonoBehaviour
 
 	void Start()
     {
+		// if the map generation was not enabled in teh editor, we spawn tiles on startup
+		if (transform.childCount > 0)
+			return;
+
+		GenerateGrid();
+	}
+
+	private void OnDisable()
+	{
+		// if the tiles were spawned runtime not from editor, despawn
+		if (transform.childCount > 0 && EditorGenerateGrid)
+			Cleanup();
 	}
 
 	void Update()
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR 
+		// check if we want to spawn from editor
 		if(Application.isPlaying == false)
 			HandleEditorGridGeneration();
 #endif
@@ -55,6 +68,7 @@ public class MapGrid : MonoBehaviour
 			Cleanup();
 		}
 	}
+#endif
 
 	private Color GetPixel(Color[] Pixels, int X, int Y, int H, int W) 
 	{ 
@@ -118,7 +132,6 @@ public class MapGrid : MonoBehaviour
 			DestroyImmediate(transform.GetChild(i).gameObject);
 		}
 	}
-#endif
 
 	//todo: have the current equipped tool passed as param both here and on the tile. Or Get it from player?
 	public void Interact()

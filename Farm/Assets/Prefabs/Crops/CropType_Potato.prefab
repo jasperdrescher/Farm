@@ -51,10 +51,17 @@ MonoBehaviour:
   Type: 1
   Steps:
   - StepPrefab: {fileID: 5424261194527589668}
+    TimeUntilNextStep: 0
+    RequiredTool: 3
   - StepPrefab: {fileID: 1382805160714783283}
+    TimeUntilNextStep: 60
+    RequiredTool: 3
   - StepPrefab: {fileID: 4129088007549420232}
+    TimeUntilNextStep: 180
+    RequiredTool: 3
   - StepPrefab: {fileID: 7509339750798743419}
-  CurrentStep: 0
+    TimeUntilNextStep: 360
+    RequiredTool: 2
 --- !u!1001 &809482525553712486
 PrefabInstance:
   m_ObjectHideFlags: 0
