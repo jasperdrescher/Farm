@@ -5,11 +5,13 @@ public class FarmingTools : MonoBehaviour
 	enum EFarmingTools
 	{ 
 		None,
-		Rake,
-		Spade,
-		WaterBucket,
+		Shovel,
+		WateringPot,
 		Sickle,
+		PlantingTool,
 	}
+
+	// GrassField --[Shovel]--> Farming Plot --[PlantingTool]-> Crop Step 0 --[Watering]-> ...repeat + time --[Sickle]-> Loot
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
