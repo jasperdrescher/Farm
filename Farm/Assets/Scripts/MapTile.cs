@@ -27,6 +27,7 @@ public class MapTile : MonoBehaviour
 #region private
 	// do not change directly... use TileType
 	private ETileType m_TileType = ETileType.Grass;
+	private bool m_ActiveTile = false;
 #endregion
 
 	void Start()
@@ -71,20 +72,25 @@ public class MapTile : MonoBehaviour
 		}
 	}
 
-	/*
-	public void PlantCrop(Crop NewCrop)
+	private void OnTriggerEnter(Collider other)
 	{
-		if (CurrentCrop)
-			return;
-
-		CurrentCrop = transform.gameObject.AddComponent<CropRuntime>();
-		CurrentCrop.Init(NewCrop);
+		if (other.gameObject.CompareTag("Player"))
+		{ 
+			m_ActiveTile = true;
+		}
 	}
-	*/
 
-	void OnTriggerStay(Collider Other)
+	private void OnTriggerExit(Collider other)
 	{
-		//Debug.Log(Other.transform.name);
+		if (other.gameObject.CompareTag("Player"))
+		{
+			m_ActiveTile = false;
+		}
+	}
+
+	public bool IsActive()
+	{ 
+		return m_ActiveTile;
 	}
 
 	// todo: add an enum value as parameter for the current used tool
