@@ -100,6 +100,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7722251070494153293, guid: 678ef88f446145545baad524178ca435, type: 3}
+      propertyPath: Steps.Array.data[1].TimeUntilNextStep
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722251070494153293, guid: 678ef88f446145545baad524178ca435, type: 3}
+      propertyPath: Steps.Array.data[2].TimeUntilNextStep
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722251070494153293, guid: 678ef88f446145545baad524178ca435, type: 3}
+      propertyPath: Steps.Array.data[0].NeedsWaterToChangeNextStep
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722251070494153293, guid: 678ef88f446145545baad524178ca435, type: 3}
+      propertyPath: Steps.Array.data[1].NeedsWaterToChangeNextStep
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722251070494153293, guid: 678ef88f446145545baad524178ca435, type: 3}
+      propertyPath: Steps.Array.data[2].NeedsWaterToChangeNextStep
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

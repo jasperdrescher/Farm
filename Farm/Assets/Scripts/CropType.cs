@@ -15,10 +15,11 @@ public class CropType : MonoBehaviour
 	public class CropGrowStep
 	{
 		public GameObject StepPrefab;
+		public float TimeUntilNextStep = 0;
+		public bool NeedsWaterToChangeNextStep = false;
 	}
 
 	public CropGrowStep[] Steps;
-	public int CurrentStep = 0;
 
 	void Start()
     {
@@ -32,7 +33,6 @@ public class CropType : MonoBehaviour
 
 	void ChangeStep(int Step)
 	{
-		CurrentStep = Mathf.Clamp(Step, 0, Steps.Length - 1);
 		for (int i = 0; i < Steps.Length; i++)
 		{
 			Steps[i].StepPrefab.SetActive(i == Step);

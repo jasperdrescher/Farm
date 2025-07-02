@@ -53,7 +53,10 @@ public class MapTile : MonoBehaviour
 
 		// init crop
 		m_Crop = CropGameObject != null ? CropGameObject.GetComponent<Crop>() : null;
-		m_Crop.Init();
+		if (m_Crop != null)
+		{
+			m_Crop.Init();
+		}
 		CropGameObject.SetActive(false);
 	}
 
