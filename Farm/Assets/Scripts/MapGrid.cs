@@ -80,6 +80,11 @@ public class MapGrid : MonoBehaviour
 	public void GenerateGrid()
 	{
 		bool useMapAsset = MapAsset != null;
+		if(useMapAsset && !MapAsset.isReadable)
+		{
+			UnityEngine.Debug.LogError("MapAsset must be Readable! Enable Advanced/Read-Write option on texture asset)");
+			useMapAsset = false;
+		}
 		Color[] pixels = useMapAsset ? MapAsset.GetPixels() : null;
 
 		Vector3 p = transform.position;
