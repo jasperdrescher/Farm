@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class FarmingTools : MonoBehaviour
 {
-	enum EFarmingTools
+	public enum EFarmingTools
 	{ 
 		None,
+        Hoe,
 		Shovel,
 		WateringPot,
 		Sickle,
