@@ -24,10 +24,13 @@ public class MapTile : MonoBehaviour
 
 	public ETileType TileType = ETileType.Grass;
 
-#region private
+	public GameObject CropGameObject;
+
+	#region private
 	// do not change directly... use TileType
 	private ETileType m_TileType = ETileType.Grass;
 	private bool m_ActiveTile = false;
+	private Crop m_Crop;
 #endregion
 
 	void Start()
@@ -47,6 +50,11 @@ public class MapTile : MonoBehaviour
 
 		// init visual
 		OnTileTypeChange(m_TileType);
+
+		// init crop
+		m_Crop = CropGameObject != null ? CropGameObject.GetComponent<Crop>() : null;
+		m_Crop.Init();
+		CropGameObject.SetActive(false);
 	}
 
     void Update()
