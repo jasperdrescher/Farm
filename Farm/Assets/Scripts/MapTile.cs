@@ -1,112 +1,127 @@
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.SceneManagement;
-using UnityEditor.UI;
 using UnityEngine;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 public class MapTile : MonoBehaviour
 {
-	public enum ETileType
-	{ 
-		Grass,
-		FarmField,
-	}
+	[Header("Setup")]
+	public List<TileData> m_tileTypes;
+	public GameObject m_cropPrefab;
 
-	[System.Serializable]
-	public class TileTypeEntry
-	{
-		public ETileType TileType;
-		public GameObject Prefab;
-		public float TileHeight = 2.0f;
-	}
-
-	public TileTypeEntry[] TileTypes;
-
-	public ETileType TileType = ETileType.Grass;
-
-	public GameObject CropGameObject;
+	[Header("Editor")]
+	public TileTypes.Enum m_editorTileTypeChanger = TileTypes.Enum.None;
 
 	#region private
-	// do not change directly... use TileType
-	private ETileType m_TileType = ETileType.Grass;
-	private bool m_ActiveTile = false;
-	private Crop m_Crop;
-#endregion
+	private MapGrid m_ownerGrid = null;
+	private Crop m_crop = null;
+	private GameObject m_cropGameObject = null;
+	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
+	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
+	#endregion
 
 	void Start()
 	{
-		// make sure mesh renderer's shadow casting is off
-		// we also have a box collider on the main prefab, so no need for them on the sub objects
-		foreach (TileTypeEntry entry in TileTypes)
+	}
+
+	public void Init(MapGrid owner, TileTypes.Enum type)
+	{
+		m_ownerGrid = owner;
+		CreateTileTypes();
+		CreateCrop();
+
+		ChangeTileType(type);
+		m_editorTileTypeChanger = type;
+	}
+
+	private void CreateTileTypes()
+	{
+		foreach (TileData tileData in m_tileTypes)
 		{
-			MeshRenderer meshRenderer =	entry.Prefab.GetComponent<MeshRenderer>();
-			if(meshRenderer != null)
+			if (tileData.m_tileType == TileTypes.Enum.None)
+				continue;
+
+			GameObject go = Instantiate(tileData.m_prefab, transform);
+			go.SetActive(false);
+
+			MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
+			if (meshRenderer != null)
 				meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-			BoxCollider boxCollider = entry.Prefab.GetComponent<BoxCollider>();
-			if(boxCollider != null)
+			// make sure mesh renderer's shadow casting is off
+			// we also have a box collider on the main prefab, so no need for them on the sub objects
+			BoxCollider boxCollider = go.GetComponent<BoxCollider>();
+			if (boxCollider != null)
 				boxCollider.enabled = false;
-		}
 
-		// init visual
-		OnTileTypeChange(m_TileType);
-
-		// init crop
-		m_Crop = CropGameObject != null ? CropGameObject.GetComponent<Crop>() : null;
-		if (m_Crop != null)
-		{
-			m_Crop.Init();
+			m_spawnedTiles.Add(tileData.m_tileType, go);	
 		}
-		CropGameObject.SetActive(false);
+	}
+
+	private void CreateCrop()
+	{
+		m_cropGameObject = Instantiate(m_cropPrefab, transform);
+		m_crop = m_cropGameObject.GetComponent<Crop>();
+		m_crop.Init(this);
 	}
 
     void Update()
     {
-		CheckValueChanges();
+#if UNITY_EDITOR
+		EditorCheckValueChanges();
+#endif
 	}
 
-	// not the nicest solution, but I need it to work from editor too...
-	void CheckValueChanges()
+#if UNITY_EDITOR
+	void EditorCheckValueChanges()
 	{
-		if (TileType != m_TileType)
-		{ 
-			m_TileType = TileType;
-			OnTileTypeChange(m_TileType);
+		if (m_editorTileTypeChanger != m_currentTileType)
+		{
+			ChangeTileType(m_editorTileTypeChanger);
 		}
 	}
+#endif
 
-	void OnTileTypeChange(ETileType NewTileType)
+	void ChangeTileType(TileTypes.Enum NewTileType)
 	{
-		foreach (TileTypeEntry entry in TileTypes)
+		if(m_currentTileType != TileTypes.Enum.None)
+			m_spawnedTiles[m_currentTileType].SetActive(false);
+
+		m_currentTileType = NewTileType;
+
+		if (m_currentTileType != TileTypes.Enum.None && m_spawnedTiles.ContainsKey(m_currentTileType))
 		{
-			entry.Prefab.SetActive(entry.TileType == NewTileType);
+			m_spawnedTiles[m_currentTileType].SetActive(true);
+
+			if (m_cropGameObject)
+				m_cropGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
 		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag("Player"))
-		{ 
-			m_ActiveTile = true;
-		}
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		if (other.gameObject.CompareTag("Player"))
 		{
-			m_ActiveTile = false;
+			if (m_ownerGrid)
+				m_ownerGrid.SetActiveTile(this);
 		}
-	}
-
-	public bool IsActive()
-	{ 
-		return m_ActiveTile;
 	}
 
 	// todo: add an enum value as parameter for the current used tool
 	public void Interact()
 	{ 
 
+	}
+
+	public float GetTileHeight()
+	{
+		/*
+		foreach (TileData tileData in m_tileTypes)
+		{
+			if (tileData.m_tileType == m_currentTileType)
+				return tileData.m_tileHeight;
+		}
+		*/
+
+		return 2.0f;
 	}
 }

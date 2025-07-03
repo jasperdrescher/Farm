@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class CropRuntime : MonoBehaviour
 {
-	int CurrentStep = 0;
-	bool TimerEnabled = false;
-	float ElapsedTime = 0.0f;
+	int m_currentStep = 0;
+	bool m_timerEnabled = false;
+	float m_elapsedTime = 0.0f;
 
     void Start()
     {
@@ -18,31 +18,31 @@ public class CropRuntime : MonoBehaviour
 
 	void Reset()
 	{
-		CurrentStep = 0;
+		m_currentStep = 0;
 		ResetTimer();
 	}
 
 	void StartTimer()
 	{
-		TimerEnabled = true;
-		ElapsedTime = 0.0f;
+		m_timerEnabled = true;
+		m_elapsedTime = 0.0f;
 	}
 
 	void StopTimer()
-	{ 
-		TimerEnabled = false;
+	{
+		m_timerEnabled = false;
 	}
 
 	void ResetTimer()
 	{
 		StopTimer();
-		ElapsedTime = 0.0f;
+		m_elapsedTime = 0.0f;
 	}
 
 	void HandleTimer()
 	{
-		if(TimerEnabled)
-			ElapsedTime += Time.deltaTime;
+		if(m_timerEnabled)
+			m_elapsedTime += Time.deltaTime;
 	}
 
 	Crop GetCrop()
@@ -50,8 +50,8 @@ public class CropRuntime : MonoBehaviour
 		return transform.gameObject.GetComponent<Crop>();
 	}
 
-	CropType GetCropType()
+	/*CropType GetCropType()
 	{
 		return GetCrop().GetCropType();
-	}
+	}*/
 }

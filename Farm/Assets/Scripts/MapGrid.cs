@@ -1,6 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.Tilemaps;
 using static MapTile;
 using static UnityEditor.PlayerSettings;
 
@@ -8,28 +7,37 @@ using static UnityEditor.PlayerSettings;
 public class MapGrid : MonoBehaviour
 {
 	[Header("Setup")]
-	public GameObject TilePrefab;
-	public Vector2 GridSize;
-	public Vector2 TileSize;
+	public GameObject m_tilePrefab;
+	public Vector2 m_gridSize;
+	public Vector2 m_tileSize;
 
 	[Header("Generate From Image")]
-	public Texture2D MapAsset;
+	public Texture2D m_mapAsset;
+
 	[System.Serializable]
 	public class MapAssetColorTilePairs
 	{
-		public Color PixelColor;
-		public MapTile.ETileType TileType;
+		public Color m_pixelColor = Color.white;
+		public TileTypes.Enum m_tileType = TileTypes.Enum.None;
+		public CropTypes.Enum m_cropType = CropTypes.Enum.None;
+		public int m_cropStep = 0;
 	}
 
-	public MapTile.ETileType DefaultTileType;
-	public MapAssetColorTilePairs[] MapAssetColorTileAssignment;
+	public TileTypes.Enum m_defaultTileType;
+	public MapAssetColorTilePairs[] m_mapAssetColorTileAssignment;
 
 	[Header("Editor")]
-	public bool EditorGenerateGrid = false;
+	public bool m_editorGenerateGrid = false;
+
+	#region private
+	private MapTile m_currentActiveTile = null;
+	#endregion
+
+	///////////////////////////////////
 
 	void Start()
     {
-		// if the map generation was not enabled in teh editor, we spawn tiles on startup
+		// if the map generation was not enabled in the editor, we spawn tiles on startup
 		if (transform.childCount > 0)
 			return;
 
@@ -39,7 +47,7 @@ public class MapGrid : MonoBehaviour
 	private void OnDisable()
 	{
 		// if the tiles were spawned runtime not from editor, despawn
-		if (transform.childCount > 0 && EditorGenerateGrid)
+		if (transform.childCount > 0 && m_editorGenerateGrid)
 			Cleanup();
 	}
 
@@ -56,10 +64,10 @@ public class MapGrid : MonoBehaviour
 	// editor stuff
 	void HandleEditorGridGeneration()
 	{
-		if (transform.childCount > 0 && EditorGenerateGrid)
+		if (transform.childCount > 0 && m_editorGenerateGrid)
 			return;
 
-		if (EditorGenerateGrid)
+		if (m_editorGenerateGrid)
 		{
 			GenerateGrid();
 		}
@@ -70,57 +78,53 @@ public class MapGrid : MonoBehaviour
 	}
 #endif
 
-	private Color GetPixel(Color[] Pixels, int X, int Y, int H, int W) 
+	private Color GetPixel(Color[] Pixels, int x, int y, int h, int w) 
 	{ 
-		if(X >= W || Y >= H)
+		if(x >= w || y >= h)
 			return Color.white;
 
-		int idx = Y * W + X;
+		int idx = y * w + x;
 		
 		return idx < Pixels.Length ? Pixels[idx] : Color.white;
 	}
 
-	private MapTile.ETileType GetTileTypeForColor(Color c)
+	private TileTypes.Enum GetTileTypeForColor(Color c)
 	{
-		foreach (MapAssetColorTilePairs cttp in MapAssetColorTileAssignment)
+		foreach (MapAssetColorTilePairs cttp in m_mapAssetColorTileAssignment)
 		{
-			if (cttp.PixelColor == c)
-				return cttp.TileType;
+			if (cttp.m_pixelColor == c)
+				return cttp.m_tileType;
 		}
 
-		return DefaultTileType;
+		return m_defaultTileType;
 	}
 
 	public void GenerateGrid()
 	{
-		bool useMapAsset = MapAsset != null;
-		if(useMapAsset && !MapAsset.isReadable)
+		bool useMapAsset = m_mapAsset != null;
+		if(useMapAsset && !m_mapAsset.isReadable)
 		{
-			UnityEngine.Debug.LogError("MapAsset must be Readable! Enable Advanced/Read-Write option on texture asset)");
+			Debug.LogError("MapAsset must be Readable! Enable Advanced/Read-Write option on texture asset)");
 			useMapAsset = false;
 		}
-		Color[] pixels = useMapAsset ? MapAsset.GetPixels() : null;
+
+		Color[] pixels = useMapAsset ? m_mapAsset.GetPixels() : null;
 
 		Vector3 p = transform.position;
-		p.x -= (GridSize.x / 2.0f * TileSize.x);
-		p.z -= (GridSize.y / 2.0f * TileSize.y);
+		p.x -= (m_gridSize.x / 2.0f * m_tileSize.x);
+		p.z -= (m_gridSize.y / 2.0f * m_tileSize.y);
 
-		for (int i = 0; i < GridSize.x; i++)
+		for (int i = 0; i < m_gridSize.x; i++)
 		{
-			for (int j = 0; j < GridSize.y; j++)
+			for (int j = 0; j < m_gridSize.y; j++)
 			{
-				GameObject Tile = Instantiate(TilePrefab, transform);
-				Tile.transform.position = new Vector3(p.x + i * TileSize.x, 0.0f, p.z + j * TileSize.y);
+				GameObject tile = Instantiate(m_tilePrefab, transform);
+				tile.transform.position = new Vector3(p.x + i * m_tileSize.x, 0.0f, p.z + j * m_tileSize.y);
 
-				if (useMapAsset)
-				{
-					Color c = GetPixel(pixels, i, j, MapAsset.width, MapAsset.height);
-					MapTile.ETileType tt = GetTileTypeForColor(c);
+				Color c = useMapAsset ? GetPixel(pixels, i, j, m_mapAsset.width, m_mapAsset.height) : Color.white;
 
-					MapTile mt = Tile.GetComponent<MapTile>();
-					if(mt != null)
-						mt.TileType = tt;
-				}
+				MapTile mapTile = tile.GetComponent<MapTile>();
+				mapTile.Init(this, GetTileTypeForColor(c));
 			}
 		}
 	}
@@ -136,13 +140,12 @@ public class MapGrid : MonoBehaviour
 	//todo: have the current equipped tool passed as param both here and on the tile. Or Get it from player?
 	public void Interact()
 	{
-		foreach (Transform t in transform) 
-		{
-			MapTile tile = t.gameObject.GetComponent<MapTile>();
-			if (tile != null && tile.IsActive())
-			{ 
-				tile.Interact();
-			}
-		}
+		if (m_currentActiveTile)
+			m_currentActiveTile.Interact();
+	}
+
+	public void SetActiveTile(MapTile tile)
+	{ 
+		m_currentActiveTile = tile;
 	}
 }

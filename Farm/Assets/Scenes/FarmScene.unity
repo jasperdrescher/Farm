@@ -313,15 +313,51 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4191038616883355087, guid: 4248ae201cc194a4f99283ad9f9e903a, type: 3}
     - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAsset
+      value: 
+      objectReference: {fileID: 2800000, guid: b5439fe5c21296643bee1b759e718de9, type: 3}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_gridSize.x
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_gridSize.y
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_tilePrefab
+      value: 
+      objectReference: {fileID: 4191038616883355087, guid: 4248ae201cc194a4f99283ad9f9e903a, type: 3}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_tileSize.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_tileSize.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
       propertyPath: DebugSpawnCrop
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_defaultTileType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
       propertyPath: EditorGenerateGrid
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_editorGenerateGrid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
       propertyPath: MapAssetColorTileAssignment.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
@@ -342,6 +378,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
       propertyPath: MapAssetColorTileAssignment.Array.data[0].PixelColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[0].m_tileType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[1].m_tileType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[0].m_pixelColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[0].m_pixelColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[0].m_pixelColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7387202679445613264, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
+      propertyPath: m_mapAssetColorTileAssignment.Array.data[0].m_pixelColor.r
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
