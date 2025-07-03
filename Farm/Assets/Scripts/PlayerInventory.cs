@@ -64,7 +64,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void InputNext(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.canceled)
+        if (!callbackContext.performed)
             return;
 
         int current = (int)m_currentTool;
@@ -86,7 +86,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void InputPrevious(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.canceled)
+        if (!callbackContext.performed)
             return;
 
         int current = (int)m_currentTool;
