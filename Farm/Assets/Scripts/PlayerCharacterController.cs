@@ -3,35 +3,35 @@ using UnityEngine.InputSystem;
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    public float rotationSpeed = 10f;
-    public float moveSpeed = 4f;
-    public float RunSpeedMultiplier = 1.5f;
+    public float m_rotationSpeed = 10f;
+    public float m_moveSpeed = 4f;
+    public float m_runSpeedMultiplier = 1.5f;
 
     [SerializeField]
-    private Vector3 moveDirection;
+    private Vector3 m_moveDirection;
 
     [SerializeField]
-    private float runAnimSpeed = 0.8f;
+    private float m_runAnimSpeed = 0.8f;
 
-    private Animator animator;
-    private float currentRunSpeed;
+    private Animator m_animator;
+    private float m_currentRunSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        animator = GetComponent<Animator>();
-        currentRunSpeed = 1f;
+        m_animator = GetComponent<Animator>();
+        m_currentRunSpeed = 1f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (moveDirection.magnitude != 0.0f)
+        if (m_moveDirection.magnitude != 0.0f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            var targetRotation = Quaternion.LookRotation(m_moveDirection);
+            var playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, m_rotationSpeed * Time.deltaTime);
             transform.rotation = playerRotation;
-            transform.position += transform.forward * ((moveSpeed * currentRunSpeed) * Time.deltaTime);
+            transform.position += transform.forward * ((m_moveSpeed * m_currentRunSpeed) * Time.deltaTime);
         }
     }
 
@@ -39,39 +39,39 @@ public class PlayerCharacterController : MonoBehaviour
     {
         if (callbackContext.canceled)
         {
-            animator.SetBool("IsWalking", false);
-            moveDirection = Vector3.zero;
+            m_animator.SetBool("IsWalking", false);
+            m_moveDirection = Vector3.zero;
             return;
         }
 
-        animator.SetBool("IsWalking", true);
-        Vector2 input = callbackContext.ReadValue<Vector2>();
-        moveDirection = new Vector3(input.x * -1f, 0f, input.y * -1f);
+        m_animator.SetBool("IsWalking", true);
+        var input = callbackContext.ReadValue<Vector2>();
+        m_moveDirection = new Vector3(input.x * -1f, 0f, input.y * -1f);
     }
 
     public void InputRun(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.canceled)
         {
-            animator.SetBool("IsRunning", false);
-            currentRunSpeed = 1f;
-            animator.speed = 1f;
+            m_animator.SetBool("IsRunning", false);
+            m_currentRunSpeed = 1f;
+            m_animator.speed = 1f;
             return;
         }
 
-        animator.SetBool("IsRunning", true);
-        currentRunSpeed = RunSpeedMultiplier;
-        animator.speed = runAnimSpeed;
+        m_animator.SetBool("IsRunning", true);
+        m_currentRunSpeed = m_runSpeedMultiplier;
+        m_animator.speed = m_runAnimSpeed;
     }
 
     public void InputAttack(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.canceled)
         {
-            animator.SetBool("IsAttacking", false);
+            m_animator.SetBool("IsAttacking", false);
             return;
         }
 
-        animator.SetBool("IsAttacking", true);
+        m_animator.SetBool("IsAttacking", true);
     }
 }

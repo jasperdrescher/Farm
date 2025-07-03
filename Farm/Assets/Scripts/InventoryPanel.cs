@@ -4,19 +4,19 @@ using UnityEngine.UI;
 public class InventoryPanel : MonoBehaviour
 {
     [SerializeField]
-    private GameObject HoeImageObject;
+    private GameObject m_hoeImageObject;
 
     [SerializeField]
-    private GameObject ShovelImageObject;
+    private GameObject m_shovelImageObject;
 
     [SerializeField]
-    private GameObject WateringPotImageObject;
+    private GameObject m_wateringPotImageObject;
 
     [SerializeField]
-    private GameObject SickleImageObject;
+    private GameObject m_sickleImageObject;
 
     [SerializeField]
-    private GameObject PlantingToolImageObject;
+    private GameObject m_plantingToolImageObject;
 
     void Start()
     {
@@ -30,6 +30,6 @@ public class InventoryPanel : MonoBehaviour
 
     public void CycleImage()
     {
-        HoeImageObject.GetComponent<Image>().color = Color.yellow;
+        m_hoeImageObject.GetComponent<Image>().color = Color.yellow;
     }
 }

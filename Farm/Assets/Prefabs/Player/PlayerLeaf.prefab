@@ -164,11 +164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baaa16d1f4c06424bb19ac0fd763a291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
-  moveSpeed: 4
-  RunSpeedMultiplier: 1.5
-  moveDirection: {x: 0, y: 0, z: 0}
-  runAnimSpeed: 0.8
+  m_rotationSpeed: 10
+  m_moveSpeed: 4
+  m_runSpeedMultiplier: 1.5
+  m_moveDirection: {x: 0, y: 0, z: 0}
+  m_runAnimSpeed: 0.8
 --- !u!114 &7986891340690510551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,8 +181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3b9eac8ee4dc446acd78d728f87550, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTool: 0
-  ToolDataObjects:
+  m_currentTool: 0
+  m_toolDataObjects:
   - {fileID: 11400000, guid: 72b750273bbf74a4484a0a2b70ae2cfd, type: 2}
   - {fileID: 11400000, guid: c69f20168d0748743b4c94bc53d70099, type: 2}
   - {fileID: 11400000, guid: 03050ac3ed6b0f646a75c0035b8ffb05, type: 2}

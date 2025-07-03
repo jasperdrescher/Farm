@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67778e39c1b42c14ba4089ade47eb847, type: 3}
   m_Name: Shovel
   m_EditorClassIdentifier: 
-  tool: 2
-  prefab: {fileID: 6013926057701310411, guid: fba6bcb3c7d442c4f95fafcbfffcd636, type: 3}
+  m_tool: 2
+  m_prefab: {fileID: 6013926057701310411, guid: fba6bcb3c7d442c4f95fafcbfffcd636, type: 3}

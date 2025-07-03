@@ -3,36 +3,36 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    private Vector3 offset = new Vector3(0f, 12f, 10f);
+    private Vector3 m_offset = new Vector3(0f, 12f, 10f);
 
     [SerializeField]
-    private float followSpeed = 5f;
+    private float m_followSpeed = 5f;
 
     [SerializeField]
-    private Vector3 rotation = new Vector3(50f, 180f, 0f);
+    private Vector3 m_rotation = new Vector3(50f, 180f, 0f);
 
-    private Transform playerTransform;
-    private Quaternion fixedRotation;
+    private Transform m_playerTransform;
+    private Quaternion m_fixedRotation;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playerTransform = GameObject.FindWithTag("Player").transform;
-        if (playerTransform == null)
+        m_playerTransform = GameObject.FindWithTag("Player").transform;
+        if (m_playerTransform == null)
         {
             Debug.LogError("Failed to find player");
         }
 
-        fixedRotation = Quaternion.Euler(rotation);
+        m_fixedRotation = Quaternion.Euler(m_rotation);
     }
 
     void LateUpdate()
     {
-        if (playerTransform == null)
+        if (m_playerTransform == null)
             return;
 
-        Vector3 desiredPosition = playerTransform.position + offset;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        transform.rotation = fixedRotation;
+        Vector3 desiredPosition = m_playerTransform.position + m_offset;
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, m_followSpeed * Time.deltaTime);
+        transform.rotation = m_fixedRotation;
     }
 }

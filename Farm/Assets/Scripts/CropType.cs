@@ -25,7 +25,7 @@ public class CropType : MonoBehaviour
 	{
 		public GameObject StepPrefab;
 		public float TimeUntilNextStep = 0;
-		public FarmingTools.EFarmingTools RequiredTool;
+		public FarmingTools.Tool RequiredTool;
 	}
 
 	/*

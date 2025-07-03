@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67778e39c1b42c14ba4089ade47eb847, type: 3}
   m_Name: PlantingTool
   m_EditorClassIdentifier: 
-  tool: 5
-  prefab: {fileID: 7301850615850235150, guid: c4c2aaced210d764795bf8975842769a, type: 3}
+  m_tool: 5
+  m_prefab: {fileID: 7301850615850235150, guid: c4c2aaced210d764795bf8975842769a, type: 3}

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67778e39c1b42c14ba4089ade47eb847, type: 3}
   m_Name: Hoe
   m_EditorClassIdentifier: 
-  tool: 1
-  prefab: {fileID: 1077808093796763504, guid: 1d0f81e523cec3e4488003567007b90a, type: 3}
+  m_tool: 1
+  m_prefab: {fileID: 1077808093796763504, guid: 1d0f81e523cec3e4488003567007b90a, type: 3}

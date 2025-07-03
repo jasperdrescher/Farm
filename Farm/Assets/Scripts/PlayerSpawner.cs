@@ -3,25 +3,25 @@ using UnityEngine;
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField]
-    private GameObject playerPrefab;
+    private GameObject m_playerPrefab;
 
-    private float arrowLength = 2f;
-    private Color arrowColor = Color.red;
-    private float capsuleHeight = 2.18f;
-    private float capsuleRadius = 0.5f;
+    private float m_arrowLength = 2f;
+    private Color m_arrowColor = Color.red;
+    private float m_capsuleHeight = 2.18f;
+    private float m_capsuleRadius = 0.5f;
 
     void Start()
     {
-        Instantiate(playerPrefab, transform.position, transform.rotation);
+        Instantiate(m_playerPrefab, transform.position, transform.rotation);
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = arrowColor;
+        Gizmos.color = m_arrowColor;
 
         // Draw forward arrow
         Vector3 start = transform.position;
-        Vector3 direction = transform.forward * arrowLength;
+        Vector3 direction = transform.forward * m_arrowLength;
 
         Gizmos.DrawRay(start, direction);
 
@@ -34,16 +34,16 @@ public class PlayerSpawner : MonoBehaviour
         Vector3 up = transform.up;
         Vector3 position = transform.position;
 
-        float cylinderHeight = Mathf.Max(0f, capsuleHeight - 2f * capsuleRadius);
+        float cylinderHeight = Mathf.Max(0f, m_capsuleHeight - 2f * m_capsuleRadius);
 
-        Vector3 topSphereCenter = position + up * (cylinderHeight / 2f + capsuleRadius);
-        Vector3 bottomSphereCenter = position - up * (cylinderHeight / 2f + capsuleRadius);
+        Vector3 topSphereCenter = position + up * (cylinderHeight / 2f + m_capsuleRadius);
+        Vector3 bottomSphereCenter = position - up * (cylinderHeight / 2f + m_capsuleRadius);
 
-        Gizmos.DrawWireSphere(topSphereCenter, capsuleRadius);
-        Gizmos.DrawWireSphere(bottomSphereCenter, capsuleRadius);
+        Gizmos.DrawWireSphere(topSphereCenter, m_capsuleRadius);
+        Gizmos.DrawWireSphere(bottomSphereCenter, m_capsuleRadius);
 
-        Vector3 capsuleRight = transform.right * capsuleRadius;
-        Vector3 capsuleForward = transform.forward * capsuleRadius;
+        Vector3 capsuleRight = transform.right * m_capsuleRadius;
+        Vector3 capsuleForward = transform.forward * m_capsuleRadius;
 
         Gizmos.DrawLine(topSphereCenter + capsuleRight, bottomSphereCenter + capsuleRight);
         Gizmos.DrawLine(topSphereCenter - capsuleRight, bottomSphereCenter - capsuleRight);

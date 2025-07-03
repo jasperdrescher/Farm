@@ -4,53 +4,53 @@ using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public FarmingTools.EFarmingTools currentTool;
+    public FarmingTools.Tool m_currentTool;
 
     [SerializeField]
-    private List<ToolData> ToolDataObjects;
+    private List<ToolData> m_toolDataObjects;
 
-    private Dictionary<FarmingTools.EFarmingTools, GameObject> spawnedTools = new Dictionary<FarmingTools.EFarmingTools, GameObject>();
-    private Transform toolSocket;
-    private InventoryPanel inventoryPanel;
+    private Dictionary<FarmingTools.Tool, GameObject> m_spawnedTools = new Dictionary<FarmingTools.Tool, GameObject>();
+    private Transform m_toolSocket;
+    private InventoryPanel m_inventoryPanel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        inventoryPanel = FindFirstObjectByType<InventoryPanel>();
-        if (inventoryPanel == null)
+        m_inventoryPanel = FindFirstObjectByType<InventoryPanel>();
+        if (m_inventoryPanel == null)
         {
             Debug.LogError("Failed to find InventoryPanel");
             return;
         }
 
-        toolSocket = GameObject.FindWithTag("ToolSocket").transform;
-        if (toolSocket == null)
+        m_toolSocket = GameObject.FindWithTag("ToolSocket").transform;
+        if (m_toolSocket == null)
         {
             Debug.LogError("Failed to find ToolSocket");
             return;
         }
 
-        foreach (ToolData toolData in ToolDataObjects)
+        foreach (ToolData toolData in m_toolDataObjects)
         {
-            if (toolData.tool == FarmingTools.EFarmingTools.None)
+            if (toolData.m_tool == FarmingTools.Tool.None)
                 continue;
 
-            GameObject spawnedTool = Instantiate(toolData.prefab, toolSocket);
+            GameObject spawnedTool = Instantiate(toolData.m_prefab, m_toolSocket);
             spawnedTool.transform.localScale = new Vector3(1f / 100f, 1f / 100f, 1f / 100f);
             spawnedTool.SetActive(false);
-            spawnedTools.Add(toolData.tool, spawnedTool);
+            m_spawnedTools.Add(toolData.m_tool, spawnedTool);
         }
     }
 
-    public void EquipTool(FarmingTools.EFarmingTools tool)
+    public void EquipTool(FarmingTools.Tool tool)
     {
-        if (currentTool != FarmingTools.EFarmingTools.None)
-            spawnedTools[currentTool].SetActive(false);
+        if (m_currentTool != FarmingTools.Tool.None)
+            m_spawnedTools[m_currentTool].SetActive(false);
         
-        spawnedTools[tool].SetActive(true);
-        currentTool = tool;
+        m_spawnedTools[tool].SetActive(true);
+        m_currentTool = tool;
 
-        inventoryPanel.CycleImage();
+        m_inventoryPanel.CycleImage();
     }
 
     public void InputNext(InputAction.CallbackContext callbackContext)
@@ -58,18 +58,18 @@ public class PlayerInventory : MonoBehaviour
         if (callbackContext.canceled)
             return;
 
-        int current = (int)currentTool;
-        int min = (int)FarmingTools.EFarmingTools.None + 1;
-        int max = (int)FarmingTools.EFarmingTools.PlantingTool;
-        FarmingTools.EFarmingTools nextTool = FarmingTools.EFarmingTools.None;
+        int current = (int)m_currentTool;
+        int min = (int)FarmingTools.Tool.None + 1;
+        int max = (int)FarmingTools.Tool.PlantingTool;
+        FarmingTools.Tool nextTool = FarmingTools.Tool.None;
 
         if (current >= max)
         {
-            nextTool = (FarmingTools.EFarmingTools)min;
+            nextTool = (FarmingTools.Tool)min;
         }
         else
         {
-            nextTool = (FarmingTools.EFarmingTools)(current + 1);
+            nextTool = (FarmingTools.Tool)(current + 1);
         }
 
         EquipTool(nextTool);
@@ -80,22 +80,22 @@ public class PlayerInventory : MonoBehaviour
         if (callbackContext.canceled)
             return;
 
-        int current = (int)currentTool;
-        int min = (int)FarmingTools.EFarmingTools.None + 1;
-        int max = (int)FarmingTools.EFarmingTools.PlantingTool;
-        FarmingTools.EFarmingTools nextTool = FarmingTools.EFarmingTools.None;
+        int current = (int)m_currentTool;
+        int min = (int)FarmingTools.Tool.None + 1;
+        int max = (int)FarmingTools.Tool.PlantingTool;
+        FarmingTools.Tool nextTool = FarmingTools.Tool.None;
 
         if (current <= min)
         {
-            nextTool = (FarmingTools.EFarmingTools)max;
+            nextTool = (FarmingTools.Tool)max;
         }
         else if (current == 0)
         {
-            nextTool = (FarmingTools.EFarmingTools)max;
+            nextTool = (FarmingTools.Tool)max;
         }
         else
         {
-            nextTool = (FarmingTools.EFarmingTools)(current - 1);
+            nextTool = (FarmingTools.Tool)(current - 1);
         }
 
         EquipTool(nextTool);
