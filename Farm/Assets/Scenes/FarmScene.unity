@@ -297,11 +297,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5ca0ae6193b92e4a9b259c22b466c6a, type: 3}
---- !u!1 &123036361 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4812399347682131046, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-  m_PrefabInstance: {fileID: 2690998856365682138}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &580806113
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,21 +456,6 @@ Transform:
   - {fileID: 713146360}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &805509595 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4249015295120694830, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-  m_PrefabInstance: {fileID: 2690998856365682138}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &879474373 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4756117823515509831, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-  m_PrefabInstance: {fileID: 2690998856365682138}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1740570923 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 406517713671559869, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-  m_PrefabInstance: {fileID: 2690998856365682138}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1742849942
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,11 +501,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1744146461 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8251690201082932195, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-  m_PrefabInstance: {fileID: 2690998856365682138}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1867420007
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,26 +852,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4951721176837380445, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-      propertyPath: m_hoeImageObject
-      value: 
-      objectReference: {fileID: 805509595}
-    - target: {fileID: 4951721176837380445, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-      propertyPath: m_shovelImageObject
-      value: 
-      objectReference: {fileID: 1740570923}
-    - target: {fileID: 4951721176837380445, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-      propertyPath: m_sickleImageObject
-      value: 
-      objectReference: {fileID: 879474373}
-    - target: {fileID: 4951721176837380445, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-      propertyPath: m_wateringPotImageObject
-      value: 
-      objectReference: {fileID: 1744146461}
-    - target: {fileID: 4951721176837380445, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
-      propertyPath: m_plantingToolImageObject
-      value: 
-      objectReference: {fileID: 123036361}
     - target: {fileID: 6452918761916829506, guid: f4c4c0aa45b737b4ea2ad2df66834a3d, type: 3}
       propertyPath: m_Name
       value: HUDCanvas

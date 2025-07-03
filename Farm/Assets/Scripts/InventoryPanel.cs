@@ -1,35 +1,34 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryPanel : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_hoeImageObject;
+    private GameObject m_toolImagePrefab;
 
     [SerializeField]
-    private GameObject m_shovelImageObject;
+    private Dictionary<FarmingTools.Tool, GameObject> m_toolImages = new Dictionary<FarmingTools.Tool, GameObject>();
 
-    [SerializeField]
-    private GameObject m_wateringPotImageObject;
+    private FarmingTools.Tool m_currentActiveTool;
 
-    [SerializeField]
-    private GameObject m_sickleImageObject;
-
-    [SerializeField]
-    private GameObject m_plantingToolImageObject;
-
-    void Start()
+    private void Start()
     {
-        
+        for (int i = 0; i <= (int)FarmingTools.Tool.PlantingTool; ++i)
+        {
+            GameObject image = Instantiate(m_toolImagePrefab, gameObject.transform);
+            FarmingTools.Tool currentTool = (FarmingTools.Tool) i;
+            image.GetComponentInChildren<TextMeshProUGUI>().text = currentTool.ToString();
+            image.GetComponent<RectTransform>().position += new Vector3(85f * i, 0f, 0f);
+            m_toolImages.Add((FarmingTools.Tool) i, image); 
+        }
     }
 
-    void Update()
+    public void CycleImage(FarmingTools.Tool tool)
     {
-        
-    }
-
-    public void CycleImage()
-    {
-        m_hoeImageObject.GetComponent<Image>().color = Color.yellow;
+        m_toolImages[m_currentActiveTool].GetComponent<Image>().color = Color.white;
+        m_toolImages[tool].GetComponent<Image>().color = Color.yellow;
+        m_currentActiveTool = tool;
     }
 }

@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public FarmingTools.Tool m_currentTool;
+    [SerializeField]
+    private FarmingTools.Tool m_currentTool;
 
     [SerializeField]
     private List<ToolData> m_toolDataObjects;
@@ -40,17 +41,25 @@ public class PlayerInventory : MonoBehaviour
             spawnedTool.SetActive(false);
             m_spawnedTools.Add(toolData.m_tool, spawnedTool);
         }
+
+        EquipTool(FarmingTools.Tool.None);
     }
 
     public void EquipTool(FarmingTools.Tool tool)
     {
         if (m_currentTool != FarmingTools.Tool.None)
+        {
             m_spawnedTools[m_currentTool].SetActive(false);
-        
-        m_spawnedTools[tool].SetActive(true);
+        }
+
+        if (tool != FarmingTools.Tool.None)
+        {
+            m_spawnedTools[tool].SetActive(true);
+        }
+
         m_currentTool = tool;
 
-        m_inventoryPanel.CycleImage();
+        m_inventoryPanel.CycleImage(tool);
     }
 
     public void InputNext(InputAction.CallbackContext callbackContext)
@@ -59,11 +68,11 @@ public class PlayerInventory : MonoBehaviour
             return;
 
         int current = (int)m_currentTool;
-        int min = (int)FarmingTools.Tool.None + 1;
+        int min = (int)FarmingTools.Tool.None;
         int max = (int)FarmingTools.Tool.PlantingTool;
         FarmingTools.Tool nextTool = FarmingTools.Tool.None;
 
-        if (current >= max)
+        if (current == max)
         {
             nextTool = (FarmingTools.Tool)min;
         }
@@ -81,15 +90,11 @@ public class PlayerInventory : MonoBehaviour
             return;
 
         int current = (int)m_currentTool;
-        int min = (int)FarmingTools.Tool.None + 1;
+        int min = (int)FarmingTools.Tool.None;
         int max = (int)FarmingTools.Tool.PlantingTool;
         FarmingTools.Tool nextTool = FarmingTools.Tool.None;
 
-        if (current <= min)
-        {
-            nextTool = (FarmingTools.Tool)max;
-        }
-        else if (current == 0)
+        if (current == min)
         {
             nextTool = (FarmingTools.Tool)max;
         }
