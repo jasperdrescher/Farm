@@ -46,5 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cropTypes:
   - {fileID: 11400000, guid: 9a1b50a0cb245e1468d114661116bf49, type: 2}
+  - {fileID: 11400000, guid: 432c68857e1e9a442ba47f4ac0b1f81d, type: 2}
+  - {fileID: 11400000, guid: 7d78d571c24739541b1ae0750904db97, type: 2}
+  - {fileID: 11400000, guid: 179543485399fbc4684ba93f96c04b82, type: 2}
   m_editorCropTypeChanger: 0
   m_editorCropStepChanger: 0

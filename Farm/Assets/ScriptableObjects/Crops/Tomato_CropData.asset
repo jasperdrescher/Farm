@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c380ea082a9884eaaea835575e40ed, type: 3}
+  m_Name: Tomato_CropData
+  m_EditorClassIdentifier: 
+  m_type: 3
+  m_name: Tomato
+  m_steps:
+  - m_stepPrefab: {fileID: 6753372952632337072, guid: b3dfbd0a0121af74d8ea3121a598d785, type: 3}
+    m_timeUntilNextStep: 0
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 8515261146382360637, guid: 874b1d8a526f2c94cb9b8d7791b1db22, type: 3}
+    m_timeUntilNextStep: 60
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 5318319843475226064, guid: 5adc74f1e2e8aee4fb98e9bedec1ba8d, type: 3}
+    m_timeUntilNextStep: 180
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 4149689752016430917, guid: 65697987dbb72c549a705c88ef4d7f11, type: 3}
+    m_timeUntilNextStep: 300
+    m_requiredTool: 4

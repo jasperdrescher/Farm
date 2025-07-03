@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c380ea082a9884eaaea835575e40ed, type: 3}
+  m_Name: Wheat_CropData
+  m_EditorClassIdentifier: 
+  m_type: 6
+  m_name: Wheat
+  m_steps:
+  - m_stepPrefab: {fileID: 7261038283339435377, guid: 3fbbf3095013104418597d7747c952d3, type: 3}
+    m_timeUntilNextStep: 0
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 7875439674883137566, guid: 002a5ab6a56b41b40892ea6fba8e230d, type: 3}
+    m_timeUntilNextStep: 60
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 8825224058187871876, guid: 77da13dc8e3197c448cece3eaf4bf896, type: 3}
+    m_timeUntilNextStep: 180
+    m_requiredTool: 3
+  - m_stepPrefab: {fileID: 1922951382387658844, guid: 2b43b456585f1da45b4898b7d512ddf1, type: 3}
+    m_timeUntilNextStep: 300
+    m_requiredTool: 4
