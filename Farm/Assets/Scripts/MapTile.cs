@@ -124,4 +124,14 @@ public class MapTile : MonoBehaviour
 
 		return 2.0f;
 	}
+
+	// todo: remove this, just using for the quick presentation
+	public void OverrideCrop(CropTypes.Enum type, int step)
+	{
+		if (!m_crop)
+			return;
+
+		m_crop.ChangeCropType(type);
+		m_crop.ChangeCropStep(step);
+	}
 }

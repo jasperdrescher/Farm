@@ -47,11 +47,23 @@ MonoBehaviour:
   m_tilePrefab: {fileID: 4191038616883355087, guid: 4248ae201cc194a4f99283ad9f9e903a, type: 3}
   m_gridSize: {x: 64, y: 64}
   m_tileSize: {x: 2, y: 2}
-  m_mapAsset: {fileID: 2800000, guid: b5439fe5c21296643bee1b759e718de9, type: 3}
+  m_mapAsset: {fileID: 2800000, guid: 782267cb557d60f49bdecdc0d82aa5e3, type: 3}
   m_defaultTileType: 1
   m_mapAssetColorTileAssignment:
   - m_pixelColor: {r: 0, g: 0, b: 0, a: 1}
     m_tileType: 2
     m_cropType: 0
     m_cropStep: 0
+  - m_pixelColor: {r: 0, g: 1, b: 0, a: 1}
+    m_tileType: 2
+    m_cropType: 7
+    m_cropStep: 3
+  - m_pixelColor: {r: 1, g: 0, b: 0, a: 1}
+    m_tileType: 2
+    m_cropType: 6
+    m_cropStep: 3
+  - m_pixelColor: {r: 0, g: 0, b: 1, a: 1}
+    m_tileType: 2
+    m_cropType: 1
+    m_cropStep: 3
   m_editorGenerateGrid: 0

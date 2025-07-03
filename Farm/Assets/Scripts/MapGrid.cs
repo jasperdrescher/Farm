@@ -15,7 +15,7 @@ public class MapGrid : MonoBehaviour
 	public Texture2D m_mapAsset;
 
 	[System.Serializable]
-	public class MapAssetColorTilePairs
+	public class MapAssetColorTilePairs // todo: rename, it is not just a pair anymore
 	{
 		public Color m_pixelColor = Color.white;
 		public TileTypes.Enum m_tileType = TileTypes.Enum.None;
@@ -99,6 +99,17 @@ public class MapGrid : MonoBehaviour
 		return m_defaultTileType;
 	}
 
+	private MapAssetColorTilePairs GetColorEncodedData(Color c)
+	{
+		foreach (MapAssetColorTilePairs cttp in m_mapAssetColorTileAssignment)
+		{
+			if (cttp.m_pixelColor == c)
+				return cttp;
+		}
+
+		return new MapAssetColorTilePairs();
+	}
+
 	public void GenerateGrid()
 	{
 		bool useMapAsset = m_mapAsset != null;
@@ -125,6 +136,15 @@ public class MapGrid : MonoBehaviour
 
 				MapTile mapTile = tile.GetComponent<MapTile>();
 				mapTile.Init(this, GetTileTypeForColor(c));
+
+				MapAssetColorTilePairs cced = GetColorEncodedData(c);
+				if (cced.m_tileType != TileTypes.Enum.None)
+				{
+					if (cced.m_cropType != CropTypes.Enum.None)
+					{
+						mapTile.OverrideCrop(cced.m_cropType, cced.m_cropStep);
+					}
+				}
 			}
 		}
 	}

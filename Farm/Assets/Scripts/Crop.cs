@@ -89,6 +89,7 @@ public class Crop : MonoBehaviour
 		}
 
 		m_currentCropType = type;
+		m_editorCropTypeChanger = type;
 
 		m_currentCropStep = 0;
 		m_editorCropStepChanger = m_currentCropStep;
