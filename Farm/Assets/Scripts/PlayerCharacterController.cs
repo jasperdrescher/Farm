@@ -39,7 +39,7 @@ public class PlayerCharacterController : MonoBehaviour
 
 	public void InputMove(InputAction.CallbackContext callbackContext)
 	{
-		if (!m_canMove)
+		if (!m_canMove) // see comment in InputInteract
 		{
 			return;
 		}
@@ -90,6 +90,7 @@ public class PlayerCharacterController : MonoBehaviour
 			return;
 		}
 
+		// this is too hacky: does not stops the animations + have to restore movement after stopped interacting
 		m_moveDirection = new Vector3(0f, 0f, 0f);
 		m_canMove = false;
 	}
