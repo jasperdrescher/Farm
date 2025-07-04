@@ -26,8 +26,6 @@ public class PlayerInteraction : MonoBehaviour
 			{
 				m_interacted = true;
 
-				Debug.Log("Interaction Completed!");
-
 				if (EnsureMapGrid())
 				{
 					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
@@ -63,19 +61,27 @@ public class PlayerInteraction : MonoBehaviour
 		if (callbackContext.canceled)
 		{
 			Reset();
-			Debug.Log("Interaction Ended!");
 			return;
 		}
 
 		if (!m_interacted && !m_interacting)
 		{
-			m_interactionTimer = 0.0f;
-			
-			// todo: get interaction length from tool -> m_interactionTime
+			FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
+			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool))
+			{
 
-			m_interacting = true;
+				m_interactionTimer = 0.0f;
 
-			Debug.Log("Interaction Started!");
+				// todo: get interaction length from tool -> m_interactionTime
+
+				m_interacting = true;
+			}
+			else
+			{ 
+				// invalid interaction
+				m_interacted = true;
+				Debug.LogWarning("Invalid Interaction: Can't do anything with current tool on active tile.");
+			}
 		}
 	}
 

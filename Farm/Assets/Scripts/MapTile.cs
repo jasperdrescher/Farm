@@ -17,6 +17,7 @@ public class MapTile : MonoBehaviour
 	private GameObject m_cropGameObject = null;
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
+	private bool m_activeTile = false;
 	#endregion
 
 	void Start()
@@ -68,16 +69,6 @@ public class MapTile : MonoBehaviour
     {
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
-
-		Vector2 tileSize = m_ownerGrid.m_tileSize;
-		Vector3 p1 = transform.position + new Vector3(-tileSize.x, 0.1f, -tileSize.y);
-		Vector3 p2 = transform.position + new Vector3(-tileSize.x, 0.1f, tileSize.y);
-		Vector3 p3 = transform.position + new Vector3(tileSize.x, 0.1f, tileSize.y);
-		Vector3 p4 = transform.position + new Vector3(tileSize.x, 0.1f, -tileSize.y);
-		Debug.DrawLine(p1, p2, Color.magenta, Time.deltaTime, false);
-		Debug.DrawLine(p2, p3, Color.magenta, Time.deltaTime, false);
-		Debug.DrawLine(p3, p4, Color.magenta, Time.deltaTime, false); 
-		Debug.DrawLine(p4, p1, Color.magenta, Time.deltaTime, false);
 #endif
 	}
 
@@ -97,6 +88,7 @@ public class MapTile : MonoBehaviour
 			m_spawnedTiles[m_currentTileType].SetActive(false);
 
 		m_currentTileType = NewTileType;
+		m_editorTileTypeChanger = m_currentTileType;
 
 		if (m_currentTileType != TileTypes.Enum.None && m_spawnedTiles.ContainsKey(m_currentTileType))
 		{
@@ -114,19 +106,65 @@ public class MapTile : MonoBehaviour
 			if (m_ownerGrid)
 				m_ownerGrid.SetActiveTile(this);
 
-			Debug.Log("Active Tile: " + transform.position.x + ";" + transform.position.z);
+			m_activeTile = true;
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.gameObject.CompareTag("Player"))
+		{
+			m_activeTile = false;
 		}
 	}
 
 	// todo: add an enum value as parameter for the current used tool
 	public void Interact(FarmingTools.Tool tool)
 	{
-		// just a testing
-
-		if (m_currentTileType == TileTypes.Enum.Grass)
+		switch (tool)
 		{
-			ChangeTileType(TileTypes.Enum.FarmField);
+			case FarmingTools.Tool.None:
+				break;
+			case FarmingTools.Tool.Hoe:
+				break;
+			case FarmingTools.Tool.Shovel:
+				if (m_currentTileType == TileTypes.Enum.Grass)
+				{
+					ChangeTileType(TileTypes.Enum.FarmField);
+				}
+				break;
+			case FarmingTools.Tool.WateringPot:
+				break;
+			case FarmingTools.Tool.Sickle:
+				break;
+			case FarmingTools.Tool.PlantingTool:
+				break;
+			default:
+				break;
 		}
+	}
+
+	public bool HasValidInteraction(FarmingTools.Tool tool)
+	{
+		switch (tool)
+		{
+			case FarmingTools.Tool.None:
+				break;
+			case FarmingTools.Tool.Hoe:
+				break;
+			case FarmingTools.Tool.Shovel:
+				return m_currentTileType == TileTypes.Enum.Grass;
+			case FarmingTools.Tool.WateringPot:
+				break;
+			case FarmingTools.Tool.Sickle:
+				break;
+			case FarmingTools.Tool.PlantingTool:
+				break;
+			default:
+				break;
+		}
+
+		return false;
 	}
 
 	public float GetTileHeight()

@@ -157,7 +157,14 @@ public class MapGrid : MonoBehaviour
 		}
 	}
 
-	//todo: have the current equipped tool passed as param both here and on the tile. Or Get it from player?
+	public bool HasValidInteraction(FarmingTools.Tool tool)
+	{
+		if (m_currentActiveTile)
+			return m_currentActiveTile.HasValidInteraction(tool);
+
+		return false;
+	}
+
 	public void Interact(FarmingTools.Tool tool)
 	{
 		if (m_currentActiveTile)

@@ -266,6 +266,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1607335057638982851}
+        m_TargetAssemblyTypeName: PlayerCharacterController, Assembly-CSharp
+        m_MethodName: InputInteract
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 852140f2-7766-474d-8707-702459ba45f3
     m_ActionName: 'Player/Interact[/Keyboard/e]'
   - m_PersistentCalls:
@@ -423,6 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaba0bd366185bd4ea0bd913021bb9a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_interactionTime: 1
 --- !u!4 &8839640960839667035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7845128034848757539, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
