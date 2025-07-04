@@ -175,6 +175,22 @@ public class Crop : MonoBehaviour
 		ChangeCropType(type);
 	}
 
+	public void WaterCrop()
+	{
+		if (!HasAnythingPlanted())
+			return;
+
+		ChangeCropStep(m_currentCropStep + 1);
+	}
+
+	public void HarvestCrop()
+	{
+		if (!HasAnythingPlanted())
+			return;
+
+		ChangeCropType(CropTypes.Enum.None);
+	}
+
 	public void Interact(FarmingTools.Tool tool)
 	{ 
 

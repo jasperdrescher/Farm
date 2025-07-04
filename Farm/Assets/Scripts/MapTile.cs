@@ -145,8 +145,10 @@ public class MapTile : MonoBehaviour
 				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
 			case FarmingTools.Tool.WateringPot:
+				m_crop.WaterCrop();
 				break;
 			case FarmingTools.Tool.Sickle:
+				m_crop.HarvestCrop();
 				break;
 			case FarmingTools.Tool.PlantingTool:
 				m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
@@ -169,7 +171,7 @@ public class MapTile : MonoBehaviour
 			case FarmingTools.Tool.WateringPot:
 				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasAnythingPlanted();
 			case FarmingTools.Tool.Sickle:
-				break;
+				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasAnythingPlanted();
 			case FarmingTools.Tool.PlantingTool:
 				return m_currentTileType == TileTypes.Enum.FarmField && !m_crop.HasAnythingPlanted();
 			default:
