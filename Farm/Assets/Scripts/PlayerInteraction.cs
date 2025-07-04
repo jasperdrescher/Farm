@@ -29,6 +29,7 @@ public class PlayerInteraction : MonoBehaviour
 			m_interactionTimer += Time.deltaTime;
 
             m_slider.value = GetInteractionProgress();
+			m_slider.transform.parent.transform.LookAt(Camera.main.transform.position);
 
             if (m_interactionTimer >= m_interactionTime)
 			{
