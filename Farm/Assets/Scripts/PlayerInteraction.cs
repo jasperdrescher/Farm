@@ -10,10 +10,12 @@ public class PlayerInteraction : MonoBehaviour
 	private float m_interactionTimer = 0.0f;
 	private bool m_interacting = false;
 	private bool m_interacted = false;
+	private Animator m_animator;
 
-    void Start()
+	void Start()
     {
-        m_playerInventory = transform.gameObject.GetComponent<PlayerInventory>();
+		m_animator = GetComponent<Animator>();
+		m_playerInventory = GetComponent<PlayerInventory>();
     }
 
     void Update()

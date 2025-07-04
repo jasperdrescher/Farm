@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [ExecuteInEditMode]
 public class MapTile : MonoBehaviour
@@ -18,14 +19,24 @@ public class MapTile : MonoBehaviour
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
 	private bool m_activeTile = false;
+	private int m_index = 0;
 	#endregion
+
+	[Serializable]
+	public class SaveData
+	{
+		public int m_index;
+		public TileTypes.Enum m_tileType;
+		public Crop.SaveData m_crop;
+	};
 
 	void Start()
 	{
 	}
 
-	public void Init(MapGrid owner, TileTypes.Enum type)
+	public void Init(int index, MapGrid owner, TileTypes.Enum type)
 	{
+		m_index = index;
 		m_ownerGrid = owner;
 		CreateTileTypes();
 		CreateCrop();
@@ -121,6 +132,9 @@ public class MapTile : MonoBehaviour
 	// todo: add an enum value as parameter for the current used tool
 	public void Interact(FarmingTools.Tool tool)
 	{
+		if (!HasValidInteraction(tool))
+			return;
+
 		switch (tool)
 		{
 			case FarmingTools.Tool.None:
@@ -128,16 +142,14 @@ public class MapTile : MonoBehaviour
 			case FarmingTools.Tool.Hoe:
 				break;
 			case FarmingTools.Tool.Shovel:
-				if (m_currentTileType == TileTypes.Enum.Grass)
-				{
-					ChangeTileType(TileTypes.Enum.FarmField);
-				}
+				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
 			case FarmingTools.Tool.WateringPot:
 				break;
 			case FarmingTools.Tool.Sickle:
 				break;
 			case FarmingTools.Tool.PlantingTool:
+				m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
 				break;
 			default:
 				break;
@@ -155,11 +167,11 @@ public class MapTile : MonoBehaviour
 			case FarmingTools.Tool.Shovel:
 				return m_currentTileType == TileTypes.Enum.Grass;
 			case FarmingTools.Tool.WateringPot:
-				break;
+				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasAnythingPlanted();
 			case FarmingTools.Tool.Sickle:
 				break;
 			case FarmingTools.Tool.PlantingTool:
-				break;
+				return m_currentTileType == TileTypes.Enum.FarmField && !m_crop.HasAnythingPlanted();
 			default:
 				break;
 		}
@@ -180,7 +192,7 @@ public class MapTile : MonoBehaviour
 		return 2.0f;
 	}
 
-	// todo: remove this, just using for the quick presentation
+	// [FIXME] this was made for map generation
 	public void OverrideCrop(CropTypes.Enum type, int step)
 	{
 		if (!m_crop)
@@ -188,5 +200,34 @@ public class MapTile : MonoBehaviour
 
 		m_crop.ChangeCropType(type);
 		m_crop.ChangeCropStep(step);
+	}
+
+	public bool SaveState(MapTile.SaveData data)
+	{
+		data.m_index = m_index;
+		data.m_tileType = m_currentTileType;
+		/*
+		data.m_crop = new Crop.SaveData();
+
+		bool result = m_crop.SaveState(data.m_crop);
+		if (!result)
+		{
+			Debug.LogError("Failed to Save Crop for Tile #" + m_index);
+		}
+		*/
+		return true;
+	}
+
+	public bool LoadState(MapTile.SaveData data)
+	{
+		ChangeTileType(data.m_tileType);
+
+		bool result = m_crop.LoadState(data.m_crop);
+		if (!result)
+		{
+			Debug.LogError("Failed to Load Crop for Tile #" + m_index);
+		}
+
+		return true;
 	}
 }

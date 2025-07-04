@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static CropData;
@@ -13,14 +14,22 @@ public class Crop : MonoBehaviour
 	public int m_editorCropStepChanger = 0;
 
 	#region private
+	private CropRuntime m_runtime;
 	private MapTile m_ownerMapTile = null;
 	private int m_currentCropStep = 0;
 	private CropTypes.Enum m_currentCropType = CropTypes.Enum.None;
 	private Dictionary<CropTypes.Enum, List<GameObject>> m_visuals = new Dictionary<CropTypes.Enum, List<GameObject>>();
 	#endregion
 
+	[Serializable]
+	public class SaveData
+	{
+		public CropTypes.Enum m_currentCropType;
+	}
+
 	void Start()
 	{
+		
 	}
 
 	void Update()
@@ -65,6 +74,7 @@ public class Crop : MonoBehaviour
 	public void Init(MapTile owner)
 	{
 		m_ownerMapTile = owner;
+		m_runtime = GetComponent<CropRuntime>();
 		CreateCropTypes();
 	}
 
@@ -79,6 +89,7 @@ public class Crop : MonoBehaviour
 	}
 #endif
 
+	// [FIXME] this should not be public
 	public void ChangeCropType(CropTypes.Enum type)
 	{
 		DeactivateAllVisualsForCrop(m_currentCropType);
@@ -98,9 +109,12 @@ public class Crop : MonoBehaviour
 		m_currentCropStep = 0;
 		m_editorCropStepChanger = m_currentCropStep;
 
+		m_runtime.Init(GetCropData());
+		GetCropData();
 		ChangeCropStep(m_currentCropStep);
 	}
 
+	// [FIXME] this should not be public
 	public void ChangeCropStep(int step)
 	{
 		if (m_currentCropType == CropTypes.Enum.None)
@@ -135,5 +149,44 @@ public class Crop : MonoBehaviour
 	public CropTypes.Enum GetCropType()
 	{
 		return m_currentCropType;
+	}
+
+	public CropData GetCropData()
+	{
+		foreach (CropData cropData in m_cropTypes)
+		{
+			if (cropData.m_type == m_currentCropType)
+				return ScriptableObject.Instantiate(cropData) as CropData;
+		}
+
+		return null;
+	}
+
+	public bool HasAnythingPlanted()
+	{ 
+		return m_currentCropType != CropTypes.Enum.None;
+	}
+
+	public void PlantCrop(CropTypes.Enum type)
+	{
+		if (HasAnythingPlanted())
+			return;
+
+		ChangeCropType(type);
+	}
+
+	public void Interact(FarmingTools.Tool tool)
+	{ 
+
+	}
+
+	public bool SaveState(Crop.SaveData data)
+	{
+		return true;
+	}
+
+	public bool LoadState(Crop.SaveData data)
+	{
+		return true;
 	}
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using UnityEngine;
 using static MapTile;
 using static UnityEditor.PlayerSettings;
@@ -28,10 +30,24 @@ public class MapGrid : MonoBehaviour
 
 	[Header("Editor")]
 	public bool m_editorGenerateGrid = false;
+	// keep these turned off for now, it is too experimental yet
+	public bool m_save = false;
+	public bool m_load = false;
 
 	#region private
 	private MapTile m_currentActiveTile = null;
+	private MapTile[] m_tiles = null;
+
+	private int m_saveVersion = 1;
 	#endregion
+
+	[Serializable]
+	public class SaveData
+	{
+		public int m_version;
+		public Vector2 m_gridSize;
+		public MapTile.SaveData[] m_gridSaveData;
+	};
 
 	///////////////////////////////////
 
@@ -49,6 +65,12 @@ public class MapGrid : MonoBehaviour
 		// if the tiles were spawned runtime not from editor, despawn
 		if (transform.childCount > 0 && m_editorGenerateGrid)
 			Cleanup();
+
+		if (Application.isPlaying)
+		{
+			if(m_save)
+				PlayerPrefs.SetString("grid", SaveToJson());
+		}
 	}
 
 	void Update()
@@ -112,6 +134,8 @@ public class MapGrid : MonoBehaviour
 
 	public void GenerateGrid()
 	{
+		bool loadSave = Application.isPlaying && m_load;
+
 		bool useMapAsset = m_mapAsset != null;
 		if(useMapAsset && !m_mapAsset.isReadable)
 		{
@@ -125,27 +149,43 @@ public class MapGrid : MonoBehaviour
 		p.x -= (m_gridSize.x / 2.0f * m_tileSize.x);
 		p.z -= (m_gridSize.y / 2.0f * m_tileSize.y);
 
+		m_tiles = new MapTile[(int)m_gridSize.x * (int)m_gridSize.y];
+
 		for (int i = 0; i < m_gridSize.x; i++)
 		{
 			for (int j = 0; j < m_gridSize.y; j++)
 			{
+				int index = i * (int)m_gridSize.y + j;
+
 				GameObject tile = Instantiate(m_tilePrefab, transform);
 				tile.transform.position = new Vector3(p.x + i * m_tileSize.x, 0.0f, p.z + j * m_tileSize.y);
 
 				Color c = useMapAsset ? GetPixel(pixels, i, j, m_mapAsset.width, m_mapAsset.height) : Color.white;
 
 				MapTile mapTile = tile.GetComponent<MapTile>();
-				mapTile.Init(this, GetTileTypeForColor(c));
+				mapTile.Init(index, this, GetTileTypeForColor(c));
 
-				MapAssetColorTilePairs cced = GetColorEncodedData(c);
-				if (cced.m_tileType != TileTypes.Enum.None)
+				if (!loadSave)
 				{
-					if (cced.m_cropType != CropTypes.Enum.None)
+					MapAssetColorTilePairs cced = GetColorEncodedData(c);
+					if (cced.m_tileType != TileTypes.Enum.None)
 					{
-						mapTile.OverrideCrop(cced.m_cropType, cced.m_cropStep);
+						if (cced.m_cropType != CropTypes.Enum.None)
+						{
+							mapTile.OverrideCrop(cced.m_cropType, cced.m_cropStep);
+						}
 					}
 				}
+
+				m_tiles[index] = mapTile;
 			}
+		}
+
+		if (loadSave)
+		{
+			string json = PlayerPrefs.GetString("grid");
+			if(json.Length > 0)
+				LoadFromJson(json);
 		}
 	}
 
@@ -195,5 +235,71 @@ public class MapGrid : MonoBehaviour
 
 		Gizmos.DrawLine(p1, p3);
 		Gizmos.DrawLine(p2, p4);
+	}
+
+	public bool SaveState(MapGrid.SaveData data)
+	{
+		data.m_version = m_saveVersion;
+		data.m_gridSize = m_gridSize;
+		data.m_gridSaveData = new MapTile.SaveData[m_tiles.Length];
+
+		for (int i = 0; i < m_tiles.Length; i++)
+		{
+			data.m_gridSaveData[i] = new MapTile.SaveData();
+
+			bool result = m_tiles[i].SaveState(data.m_gridSaveData[i]);
+			if (!result)
+			{
+				Debug.LogError("Failed to Save Tile Data #" + i);
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public bool LoadState(MapGrid.SaveData data)
+	{
+		if (data.m_version != m_saveVersion)
+		{
+			Debug.LogError("Saved Grid Version mismatch.");
+			return false;
+		}
+
+		if (data.m_gridSize != m_gridSize)
+		{
+			Debug.LogError("Saved Grid Size and Current Grid Size mismatch.");
+			return false;
+		}
+
+		foreach (MapTile.SaveData tileSave in data.m_gridSaveData)
+		{
+			bool result = m_tiles[tileSave.m_index].LoadState(tileSave);
+			if (!result)
+			{
+				Debug.LogError("Failed to Load Tile Data #" + tileSave.m_index);
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public string SaveToJson()
+	{
+		MapGrid.SaveData data = new MapGrid.SaveData();
+		if (SaveState(data))
+		{
+			return JsonUtility.ToJson(data);
+		}
+
+		Debug.LogError("Failed to Save Grid to Json");
+		return string.Empty;
+	}
+
+	public bool LoadFromJson(string json)
+	{
+		MapGrid.SaveData data =	JsonUtility.FromJson<MapGrid.SaveData>(json);
+		return LoadState(data);
 	}
 }
