@@ -45,7 +45,12 @@ public class PlayerInventory : MonoBehaviour
         EquipTool(FarmingTools.Tool.None);
     }
 
-    public void EquipTool(FarmingTools.Tool tool)
+	public FarmingTools.Tool GetCurrentTool()
+	{
+		return m_currentTool;
+	}
+
+	public void EquipTool(FarmingTools.Tool tool)
     {
         if (m_currentTool != FarmingTools.Tool.None)
         {

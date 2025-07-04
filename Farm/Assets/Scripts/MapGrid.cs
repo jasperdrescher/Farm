@@ -158,14 +158,35 @@ public class MapGrid : MonoBehaviour
 	}
 
 	//todo: have the current equipped tool passed as param both here and on the tile. Or Get it from player?
-	public void Interact()
+	public void Interact(FarmingTools.Tool tool)
 	{
 		if (m_currentActiveTile)
-			m_currentActiveTile.Interact();
+			m_currentActiveTile.Interact(tool);
 	}
 
 	public void SetActiveTile(MapTile tile)
 	{ 
 		m_currentActiveTile = tile;
+	}
+
+	void OnDrawGizmos()
+	{
+		Gizmos.color = Color.magenta;
+
+		float halfW = m_gridSize.x / 2.0f * m_tileSize.x;
+		float halfH = m_gridSize.y / 2.0f * m_tileSize.y;
+
+		Vector3 p1 = transform.position + new Vector3(-halfW, 0.0f, -halfH);
+		Vector3 p2 = transform.position + new Vector3(-halfW, 0.0f, halfH);
+		Vector3 p3 = transform.position + new Vector3(halfW, 0.0f, halfH);
+		Vector3 p4 = transform.position + new Vector3(halfW, 0.0f, -halfH);
+
+		Gizmos.DrawLine(p1, p2);
+		Gizmos.DrawLine(p2, p3);
+		Gizmos.DrawLine(p3, p4);
+		Gizmos.DrawLine(p4, p1);
+
+		Gizmos.DrawLine(p1, p3);
+		Gizmos.DrawLine(p2, p4);
 	}
 }

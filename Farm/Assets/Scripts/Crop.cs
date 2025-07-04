@@ -45,6 +45,10 @@ public class Crop : MonoBehaviour
 				GameObject go = Instantiate(step.m_stepPrefab, transform);
 				go.SetActive(false);
 				visuals.Add(go);
+
+				MeshRenderer mr = go.GetComponent<MeshRenderer>();
+				if (mr != null)
+					mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 			}
 
 			if (visuals.Count > 0)

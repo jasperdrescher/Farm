@@ -68,6 +68,16 @@ public class MapTile : MonoBehaviour
     {
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
+
+		Vector2 tileSize = m_ownerGrid.m_tileSize;
+		Vector3 p1 = transform.position + new Vector3(-tileSize.x, 0.1f, -tileSize.y);
+		Vector3 p2 = transform.position + new Vector3(-tileSize.x, 0.1f, tileSize.y);
+		Vector3 p3 = transform.position + new Vector3(tileSize.x, 0.1f, tileSize.y);
+		Vector3 p4 = transform.position + new Vector3(tileSize.x, 0.1f, -tileSize.y);
+		Debug.DrawLine(p1, p2, Color.magenta, Time.deltaTime, false);
+		Debug.DrawLine(p2, p3, Color.magenta, Time.deltaTime, false);
+		Debug.DrawLine(p3, p4, Color.magenta, Time.deltaTime, false); 
+		Debug.DrawLine(p4, p1, Color.magenta, Time.deltaTime, false);
 #endif
 	}
 
@@ -103,13 +113,20 @@ public class MapTile : MonoBehaviour
 		{
 			if (m_ownerGrid)
 				m_ownerGrid.SetActiveTile(this);
+
+			Debug.Log("Active Tile: " + transform.position.x + ";" + transform.position.z);
 		}
 	}
 
 	// todo: add an enum value as parameter for the current used tool
-	public void Interact()
-	{ 
+	public void Interact(FarmingTools.Tool tool)
+	{
+		// just a testing
 
+		if (m_currentTileType == TileTypes.Enum.Grass)
+		{
+			ChangeTileType(TileTypes.Enum.FarmField);
+		}
 	}
 
 	public float GetTileHeight()
