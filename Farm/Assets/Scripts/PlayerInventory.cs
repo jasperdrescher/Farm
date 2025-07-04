@@ -7,8 +7,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField]
     private FarmingTools.Tool m_currentTool;
 
-    [SerializeField]
-    private List<ToolData> m_toolDataObjects;
+    public List<ToolData> m_toolDataObjects;
 
     private Dictionary<FarmingTools.Tool, GameObject> m_spawnedTools = new Dictionary<FarmingTools.Tool, GameObject>();
     private Transform m_toolSocket;

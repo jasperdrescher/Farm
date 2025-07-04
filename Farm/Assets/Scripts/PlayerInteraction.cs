@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class PlayerInteraction : MonoBehaviour
 
 	private MapGrid m_mapGrid = null;
 	private PlayerInventory m_playerInventory = null;
+	private Slider m_slider = null;
 	private float m_interactionTimer = 0.0f;
 	private bool m_interacting = false;
 	private bool m_interacted = false;
@@ -16,6 +18,8 @@ public class PlayerInteraction : MonoBehaviour
     {
 		m_animator = GetComponent<Animator>();
 		m_playerInventory = GetComponent<PlayerInventory>();
+        m_slider = GetComponentInChildren<Slider>();
+		m_slider.gameObject.SetActive(false);
     }
 
     void Update()
@@ -24,7 +28,9 @@ public class PlayerInteraction : MonoBehaviour
 		{
 			m_interactionTimer += Time.deltaTime;
 
-			if (m_interactionTimer >= m_interactionTime)
+            m_slider.value = GetInteractionProgress();
+
+            if (m_interactionTimer >= m_interactionTime)
 			{
 				m_interacted = true;
 
@@ -32,6 +38,8 @@ public class PlayerInteraction : MonoBehaviour
 				{
 					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
 					m_mapGrid.Interact(tool);
+
+					Reset();
 				}
 				else
 				{
@@ -56,7 +64,8 @@ public class PlayerInteraction : MonoBehaviour
 		m_interacting = false;
 		m_interacted = false;
 		m_interactionTimer = 0.0f;
-	}
+        m_slider.gameObject.SetActive(false);
+    }
 
 	public void InputInteract(InputAction.CallbackContext callbackContext)
 	{
@@ -71,13 +80,21 @@ public class PlayerInteraction : MonoBehaviour
 			FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
 			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool))
 			{
+                foreach (ToolData tooldata in m_playerInventory.m_toolDataObjects)
+				{
+					if (tooldata.m_tool == tool)
+					{
+                        m_interactionTime = tooldata.m_interactionTime;
+						break;
+                    }
+				}
+
+				m_slider.gameObject.SetActive(true);
 
 				m_interactionTimer = 0.0f;
 
-				// todo: get interaction length from tool -> m_interactionTime
-
-				m_interacting = true;
-			}
+                m_interacting = true;
+            }
 			else
 			{ 
 				// invalid interaction
