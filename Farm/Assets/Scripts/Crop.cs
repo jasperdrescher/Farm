@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static CropData;
 
 [ExecuteInEditMode]
@@ -14,9 +15,9 @@ public class Crop : MonoBehaviour
 	public int m_editorCropStepChanger = 0;
 
 	#region private
-	private CropRuntime m_runtime;
+	private CropRuntime m_runtime = null;
+	private Slider m_slider = null;
 	private MapTile m_ownerMapTile = null;
-	private int m_currentCropStep = 0;
 	private CropTypes.Enum m_currentCropType = CropTypes.Enum.None;
 	private Dictionary<CropTypes.Enum, List<GameObject>> m_visuals = new Dictionary<CropTypes.Enum, List<GameObject>>();
 	#endregion
@@ -25,6 +26,7 @@ public class Crop : MonoBehaviour
 	public class SaveData
 	{
 		public CropTypes.Enum m_currentCropType;
+		public CropRuntime.SaveData m_runtime;
 	}
 
 	void Start()
@@ -37,6 +39,14 @@ public class Crop : MonoBehaviour
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
 #endif
+
+		if (m_slider && m_runtime)
+		{
+			m_slider.value = m_runtime.GetTimerProgress();	
+			m_slider.gameObject.SetActive(m_runtime.IsTimerEnabled());
+			m_slider.transform.parent.transform.LookAt(Camera.main.transform.position);
+			m_slider.transform.parent.transform.rotation *= Quaternion.Euler(0f, 180f, 0f);
+		}
 	}
 
 	public void CreateCropTypes()
@@ -75,6 +85,10 @@ public class Crop : MonoBehaviour
 	{
 		m_ownerMapTile = owner;
 		m_runtime = GetComponent<CropRuntime>();
+
+		m_slider = GetComponentInChildren<Slider>();
+		m_slider.gameObject.SetActive(false);
+
 		CreateCropTypes();
 	}
 
@@ -84,7 +98,7 @@ public class Crop : MonoBehaviour
 		if (m_editorCropTypeChanger != m_currentCropType)
 			ChangeCropType(m_editorCropTypeChanger);
 
-		if(m_editorCropStepChanger != m_currentCropStep)
+		if(m_editorCropStepChanger != m_runtime.m_currentStep)
 			ChangeCropStep(m_editorCropStepChanger);
 	}
 #endif
@@ -98,20 +112,20 @@ public class Crop : MonoBehaviour
 		{
 			m_currentCropType = CropTypes.Enum.None;
 			m_editorCropTypeChanger = m_currentCropType;
-			m_currentCropStep = 0;
-			m_editorCropStepChanger = m_currentCropStep;
+			m_runtime.m_currentStep = 0;
+			m_editorCropStepChanger = m_runtime.m_currentStep;
 			return;
 		}
 
 		m_currentCropType = type;
 		m_editorCropTypeChanger = type;
 
-		m_currentCropStep = 0;
-		m_editorCropStepChanger = m_currentCropStep;
+		m_runtime.m_currentStep = 0;
+		m_editorCropStepChanger = m_runtime.m_currentStep;
 
 		m_runtime.Init(GetCropData());
 		GetCropData();
-		ChangeCropStep(m_currentCropStep);
+		ChangeCropStep(m_runtime.m_currentStep);
 	}
 
 	// [FIXME] this should not be public
@@ -119,22 +133,22 @@ public class Crop : MonoBehaviour
 	{
 		if (m_currentCropType == CropTypes.Enum.None)
 		{
-			m_currentCropStep = 0;
-			m_editorCropStepChanger = m_currentCropStep;
+			m_runtime.m_currentStep = 0;
+			m_editorCropStepChanger = m_runtime.m_currentStep;
 			return;
 		}
 
-		m_currentCropStep = Mathf.Clamp(step, 0, m_visuals[m_currentCropType].Count - 1);
-		m_editorCropStepChanger = m_currentCropStep;
+		m_runtime.m_currentStep = Mathf.Clamp(step, 0, m_visuals[m_currentCropType].Count - 1);
+		m_editorCropStepChanger = m_runtime.m_currentStep;
 
-		if (m_currentCropStep >= m_visuals[m_currentCropType].Count)
+		if (m_runtime.m_currentStep >= m_visuals[m_currentCropType].Count)
 		{
 			return;
 		}
 
 		DeactivateAllVisualsForCrop(m_currentCropType);
 
-		m_visuals[m_currentCropType][m_currentCropStep].SetActive(true);	
+		m_visuals[m_currentCropType][m_runtime.m_currentStep].SetActive(true);	
 	}
 
 	private void DeactivateAllVisualsForCrop(CropTypes.Enum type)
@@ -172,37 +186,75 @@ public class Crop : MonoBehaviour
 		if (HasAnythingPlanted())
 			return;
 
+		m_runtime.Init(GetCropData());
 		ChangeCropType(type);
 	}
 
-	public void WaterCrop()
-	{
-		if (!HasAnythingPlanted())
-			return;
-
-		ChangeCropStep(m_currentCropStep + 1);
-	}
-
-	public void HarvestCrop()
-	{
-		if (!HasAnythingPlanted())
-			return;
-
-		ChangeCropType(CropTypes.Enum.None);
-	}
-
 	public void Interact(FarmingTools.Tool tool)
-	{ 
+	{
+		if (!HasAnythingPlanted())
+			return;
 
+		if (m_runtime.IsTimerEnabled())
+			return;
+
+		CropData cropData = GetCropData();
+		if (m_runtime.m_currentStep < cropData.GetLastStepIndex())
+		{
+			FarmingTools.Tool currentRequiredTool = cropData.m_steps[m_runtime.m_currentStep].m_requiredTool;
+			if (tool == currentRequiredTool)
+			{
+				ChangeCropStep(m_runtime.m_currentStep + 1);
+
+				m_runtime.StartTimerForCurrentStep();	
+			}
+		}
+		else if (m_runtime.m_currentStep == cropData.GetLastStepIndex())
+		{
+			// todo harvest
+			ChangeCropType(CropTypes.Enum.None);
+		}
+	}
+
+	public bool HasValidInteraction(FarmingTools.Tool tool)
+	{
+		if (!HasAnythingPlanted())
+			return false;
+
+		if (m_runtime.IsTimerEnabled())
+			return false;
+
+		CropData cropData = GetCropData();
+		if (m_runtime.m_currentStep < cropData.GetLastStepIndex())
+		{
+			FarmingTools.Tool currentRequiredTool = cropData.m_steps[m_runtime.m_currentStep].m_requiredTool;
+			return tool == currentRequiredTool;
+		}
+
+		return false;
 	}
 
 	public bool SaveState(Crop.SaveData data)
 	{
-		return true;
+		data.m_currentCropType = m_currentCropType;
+		data.m_runtime = new CropRuntime.SaveData();
+		return m_runtime.SaveState(data.m_runtime);
 	}
 
 	public bool LoadState(Crop.SaveData data)
 	{
+		m_currentCropType = data.m_currentCropType;
+		if (m_currentCropType != CropTypes.Enum.None)
+		{
+			ChangeCropType(m_currentCropType);
+
+			bool result = m_runtime.LoadState(data.m_runtime);
+			if (!result)
+				return false;
+
+			ChangeCropStep(m_runtime.m_currentStep);
+		}
+
 		return true;
 	}
 }

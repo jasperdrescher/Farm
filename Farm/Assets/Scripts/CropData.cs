@@ -20,4 +20,14 @@ public class CropData : ScriptableObject
 	 * add what item is the "reward" when harvested
 	 * etc...
 	 */
+
+	public int GetStepCount()
+	{ 
+		return m_steps.Length;
+	}
+
+	public int GetLastStepIndex()
+	{
+		return m_steps.Length - 1;
+	}
 }

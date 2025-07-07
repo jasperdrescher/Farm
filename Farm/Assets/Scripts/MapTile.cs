@@ -137,18 +137,13 @@ public class MapTile : MonoBehaviour
 
 		switch (tool)
 		{
-			case FarmingTools.Tool.None:
-				break;
-			case FarmingTools.Tool.Hoe:
-				break;
 			case FarmingTools.Tool.Shovel:
 				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
+			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.WateringPot:
-				m_crop.WaterCrop();
-				break;
 			case FarmingTools.Tool.Sickle:
-				m_crop.HarvestCrop();
+				m_crop.Interact(tool);
 				break;
 			case FarmingTools.Tool.PlantingTool:
 				m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
@@ -162,16 +157,13 @@ public class MapTile : MonoBehaviour
 	{
 		switch (tool)
 		{
-			case FarmingTools.Tool.None:
-				break;
-			case FarmingTools.Tool.Hoe:
-				break;
+			
 			case FarmingTools.Tool.Shovel:
 				return m_currentTileType == TileTypes.Enum.Grass;
+			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.WateringPot:
-				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasAnythingPlanted();
 			case FarmingTools.Tool.Sickle:
-				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasAnythingPlanted();
+				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasValidInteraction(tool);
 			case FarmingTools.Tool.PlantingTool:
 				return m_currentTileType == TileTypes.Enum.FarmField && !m_crop.HasAnythingPlanted();
 			default:
@@ -208,7 +200,7 @@ public class MapTile : MonoBehaviour
 	{
 		data.m_index = m_index;
 		data.m_tileType = m_currentTileType;
-		/*
+
 		data.m_crop = new Crop.SaveData();
 
 		bool result = m_crop.SaveState(data.m_crop);
@@ -216,7 +208,7 @@ public class MapTile : MonoBehaviour
 		{
 			Debug.LogError("Failed to Save Crop for Tile #" + m_index);
 		}
-		*/
+	
 		return true;
 	}
 
