@@ -30,6 +30,7 @@ public class PlayerInteraction : MonoBehaviour
 
             m_slider.value = GetInteractionProgress();
 			m_slider.transform.parent.transform.LookAt(Camera.main.transform.position);
+			m_slider.transform.parent.transform.rotation *= Quaternion.Euler(0f, 180f, 0f);
 
             if (m_interactionTimer >= m_interactionTime)
 			{
