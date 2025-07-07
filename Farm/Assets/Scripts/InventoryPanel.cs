@@ -31,4 +31,22 @@ public class InventoryPanel : MonoBehaviour
         m_toolImages[tool].GetComponent<Image>().color = Color.yellow;
         m_currentActiveTool = tool;
     }
+
+    public void HighlightAvailableTools(MapTile mapTile)
+    {
+        foreach (KeyValuePair<FarmingTools.Tool, GameObject> pair in m_toolImages)
+        {
+            if (pair.Key == m_currentActiveTool)
+                continue;
+
+            if (mapTile.HasValidInteraction(pair.Key))
+            {
+                pair.Value.GetComponent<Image>().color = Color.green;
+            }
+            else
+            {
+                pair.Value.GetComponent<Image>().color = Color.white;
+            }
+        }
+    }
 }

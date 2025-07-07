@@ -214,6 +214,8 @@ public class MapGrid : MonoBehaviour
 	public void SetActiveTile(MapTile tile)
 	{ 
 		m_currentActiveTile = tile;
+
+		FindFirstObjectByType<InventoryPanel>().HighlightAvailableTools(tile);
 	}
 
 	void OnDrawGizmos()
