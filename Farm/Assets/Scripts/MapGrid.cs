@@ -35,7 +35,6 @@ public class MapGrid : MonoBehaviour
 	public bool m_load = false;
 
 	#region private
-	private MapTile m_currentActiveTile = null;
 	private MapTile[] m_tiles = null;
 
 	private int m_saveVersion = 1;
@@ -189,6 +188,32 @@ public class MapGrid : MonoBehaviour
 		}
 	}
 
+	int GetIndexForGridPosition(Vector2 gridPos)
+	{
+		return (int)gridPos.x * (int)m_gridSize.y + (int)gridPos.y;
+	}
+
+	Vector2 GetGridPosFromWorldPos(Vector3 worldPos)
+	{
+		Vector3 basePos = transform.position;
+		float halfW = m_gridSize.x / 2.0f * m_tileSize.x;
+		float halfH = m_gridSize.y / 2.0f * m_tileSize.y;
+
+		Vector3 min = new Vector3(basePos.x - halfW, basePos.y, basePos.z - halfH);
+		Vector3 max = new Vector3(basePos.x + halfW, basePos.y, basePos.z + halfH);
+
+		if (worldPos.x < min.x || worldPos.x > max.x || worldPos.z < min.z || worldPos.z > max.z)
+			return Vector2.zero;
+
+		return new Vector2(Mathf.Round((halfW + worldPos.x) / m_tileSize.x), Mathf.Round((halfH + worldPos.z) / m_tileSize.y));
+	}
+
+	MapTile GetTileAtPos(Vector3 worldPos)
+	{ 
+		int idx = GetIndexForGridPosition(GetGridPosFromWorldPos(worldPos));
+		return (idx < m_tiles.Length && idx >= 0) ? m_tiles[idx] : null;
+	}
+
 	public void Cleanup()
 	{
 		for (int i = transform.childCount - 1; i >= 0; i--)
@@ -197,26 +222,26 @@ public class MapGrid : MonoBehaviour
 		}
 	}
 
-	public bool HasValidInteraction(FarmingTools.Tool tool)
+	public bool HasValidInteraction(FarmingTools.Tool tool, Vector3 interactionPosition)
 	{
-		if (m_currentActiveTile)
-			return m_currentActiveTile.HasValidInteraction(tool);
-
-		return false;
+		MapTile tile = GetTileAtPos(interactionPosition);
+		return tile != null ? tile.HasValidInteraction(tool) : false;
 	}
 
-	public void Interact(FarmingTools.Tool tool)
+	public void Interact(FarmingTools.Tool tool, Vector3 interactionPosition)
 	{
-		if (m_currentActiveTile)
-			m_currentActiveTile.Interact(tool);
+		MapTile tile = GetTileAtPos(interactionPosition);
+		tile?.Interact(tool);
 	}
 
+	/* todo: replace this for Tool highlight
 	public void SetActiveTile(MapTile tile)
 	{ 
 		m_currentActiveTile = tile;
 
 		FindFirstObjectByType<InventoryPanel>().HighlightAvailableTools(tile);
 	}
+	*/
 
 	void OnDrawGizmos()
 	{

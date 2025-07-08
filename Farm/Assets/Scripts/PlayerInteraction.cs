@@ -39,7 +39,7 @@ public class PlayerInteraction : MonoBehaviour
 				if (EnsureMapGrid())
 				{
 					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
-					m_mapGrid.Interact(tool);
+					m_mapGrid.Interact(tool, transform.position);
 
 					Reset();
 				}
@@ -80,7 +80,7 @@ public class PlayerInteraction : MonoBehaviour
 		if (!m_interacted && !m_interacting)
 		{
 			FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
-			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool))
+			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool, transform.position))
 			{
                 foreach (ToolData tooldata in m_playerInventory.m_toolDataObjects)
 				{

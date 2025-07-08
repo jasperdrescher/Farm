@@ -18,7 +18,6 @@ public class MapTile : MonoBehaviour
 	private GameObject m_cropGameObject = null;
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
-	private bool m_activeTile = false;
 	private int m_index = 0;
 	#endregion
 
@@ -110,25 +109,6 @@ public class MapTile : MonoBehaviour
 		}
 	}
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.gameObject.CompareTag("Player"))
-		{
-			if (m_ownerGrid)
-				m_ownerGrid.SetActiveTile(this);
-
-			m_activeTile = true;
-		}
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		if (other.gameObject.CompareTag("Player"))
-		{
-			m_activeTile = false;
-		}
-	}
-
 	// todo: add an enum value as parameter for the current used tool
 	public void Interact(FarmingTools.Tool tool)
 	{
@@ -171,6 +151,11 @@ public class MapTile : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	public int GetIndex()
+	{
+		return m_index;
 	}
 
 	public float GetTileHeight()
