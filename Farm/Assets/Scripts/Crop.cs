@@ -98,7 +98,7 @@ public class Crop : MonoBehaviour
 		if (m_editorCropTypeChanger != m_currentCropType)
 			ChangeCropType(m_editorCropTypeChanger);
 
-		if(m_editorCropStepChanger != m_runtime.m_currentStep)
+		if (m_runtime && m_editorCropStepChanger != m_runtime.m_currentStep)
 			ChangeCropStep(m_editorCropStepChanger);
 	}
 #endif
