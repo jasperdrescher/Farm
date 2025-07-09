@@ -16,7 +16,6 @@ public class Crop : MonoBehaviour
 
 	#region private
 	private CropRuntime m_runtime = null;
-	private Slider m_slider = null;
 	private MapTile m_ownerMapTile = null;
 	private CropTypes.Enum m_currentCropType = CropTypes.Enum.None;
 	private Dictionary<CropTypes.Enum, List<GameObject>> m_visuals = new Dictionary<CropTypes.Enum, List<GameObject>>();
@@ -39,14 +38,6 @@ public class Crop : MonoBehaviour
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
 #endif
-
-		if (m_slider && m_runtime)
-		{
-			m_slider.value = m_runtime.GetTimerProgress();	
-			m_slider.gameObject.SetActive(m_runtime.IsTimerEnabled());
-			m_slider.transform.parent.transform.LookAt(Camera.main.transform.position);
-			m_slider.transform.parent.transform.rotation *= Quaternion.Euler(0f, 180f, 0f);
-		}
 	}
 
 	public void CreateCropTypes()
@@ -85,9 +76,6 @@ public class Crop : MonoBehaviour
 	{
 		m_ownerMapTile = owner;
 		m_runtime = GetComponent<CropRuntime>();
-
-		m_slider = GetComponentInChildren<Slider>();
-		m_slider.gameObject.SetActive(false);
 
 		CreateCropTypes();
 	}
