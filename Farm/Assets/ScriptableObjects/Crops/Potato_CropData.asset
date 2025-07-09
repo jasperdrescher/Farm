@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_type: 1
   m_name: Potato
+  m_cropPrefab: {fileID: 5365773161637793889, guid: a8d2b623ac9922349bc7fe02bd814b71, type: 3}
   m_steps:
   - m_stepPrefab: {fileID: 2400506870180779364, guid: 2e8d245fb9c9fdb46870fc5227ac896c, type: 3}
     m_timeUntilNextStep: 0
@@ -27,3 +28,10 @@ MonoBehaviour:
   - m_stepPrefab: {fileID: 1002660021130484208, guid: 0ffe6dae4f719d340a0d86278ac7d423, type: 3}
     m_timeUntilNextStep: 300
     m_requiredTool: 4
+  m_harvestRewards:
+  - m_inventoryItem: {fileID: 11400000, guid: 8143daef4839fcd40bf2ccd22e310527, type: 2}
+    m_amountMinMax: {x: 4, y: 8}
+    m_chance: 1
+  - m_inventoryItem: {fileID: 11400000, guid: 0f9f57f097e095b4bb32cb0e6bb9a2b9, type: 2}
+    m_amountMinMax: {x: 1, y: 2}
+    m_chance: 0.5

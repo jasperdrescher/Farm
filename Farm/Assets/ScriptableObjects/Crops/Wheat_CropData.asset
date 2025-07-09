@@ -27,3 +27,6 @@ MonoBehaviour:
   - m_stepPrefab: {fileID: 1922951382387658844, guid: 2b43b456585f1da45b4898b7d512ddf1, type: 3}
     m_timeUntilNextStep: 300
     m_requiredTool: 4
+  m_harvestRewards:
+  - m_inventoryItem: {fileID: 0}
+    m_amountMinMax: {x: 0, y: 0}
