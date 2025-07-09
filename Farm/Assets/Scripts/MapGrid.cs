@@ -228,16 +228,10 @@ public class MapGrid : MonoBehaviour
 		return tile != null ? tile.HasValidInteraction(tool) : false;
 	}
 
-    public PlayerInteractionType GetPlayerInteractionType(FarmingTools.Tool tool, Vector3 interactionPosition)
-	{
-        MapTile tile = GetTileAtPos(interactionPosition);
-		return tile ? tile.GetPlayerInteractionType(tool) : PlayerInteractionType.None;
-    }
-
-	public void PlayerInteractionFinished(FarmingTools.Tool tool, Vector3 interactionPosition)
+	public void Interact(FarmingTools.Tool tool, Vector3 interactionPosition)
 	{
 		MapTile tile = GetTileAtPos(interactionPosition);
-		tile?.PlayerInteractionFinished(tool);
+		tile?.Interact(tool);
 	}
 
 	void OnDrawGizmos()

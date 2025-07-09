@@ -6,9 +6,6 @@ public class PlayerInteraction : MonoBehaviour
 {
 	public float m_interactionTime = 1.0f; // length of the interaction progressbar.
 
-	[SerializeField]
-	private PlayerInteractionType m_interactionType = PlayerInteractionType.None;
-
 	private MapGrid m_mapGrid = null;
 	private MapTile m_ActiveTile = null;
 	private PlayerInventory m_playerInventory = null;
@@ -17,19 +14,11 @@ public class PlayerInteraction : MonoBehaviour
 	private bool m_interacting = false;
 	private bool m_interacted = false;
 	private Vector3 m_playerPositionCacheForActiveTile = Vector3.zero;
+	private Animator m_animator;
 
-	private enum InteractionResult
-	{
-		None = 0,
-		Success = 1,
-		Invalid = 2,
-		Cancelled = 3,
-		Started = 4,
-		Interrupted = 5,
-    }
-
-    void Start()
+	void Start()
     {
+		m_animator = GetComponent<Animator>();
 		m_playerInventory = GetComponent<PlayerInventory>();
         m_slider = GetComponentInChildren<Slider>();
 		m_slider.gameObject.SetActive(false);
@@ -49,10 +38,17 @@ public class PlayerInteraction : MonoBehaviour
 			{
 				m_interacted = true;
 
-				FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
-				m_mapGrid.PlayerInteractionFinished(tool, transform.position);
+				if (EnsureMapGrid())
+				{
+					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
+					m_mapGrid.Interact(tool, transform.position);
 
-				InputInteractionSucceeded();
+					Reset();
+				}
+				else
+				{
+					Debug.LogWarning("Can't find MapGrid for Interaction!");
+				}
 			}
 		}
 
@@ -95,109 +91,49 @@ public class PlayerInteraction : MonoBehaviour
 		return m_interacting ? m_interactionTimer / m_interactionTime : 0.0f;
 	}
 
-	private void ResetInteraction()
+	private void Reset()
 	{
 		m_interacting = false;
 		m_interacted = false;
 		m_interactionTimer = 0.0f;
         m_slider.gameObject.SetActive(false);
-		m_interactionType = PlayerInteractionType.None;
     }
 
-    private void InputInteractionStarted()
-    {
-        m_interacting = true;
-        m_slider.gameObject.SetActive(true);
-        InteractionResult interactionResult = InteractionResult.Started;
-        Debug.Log("Input Interaction of type " + m_interactionType + " has result " + interactionResult.ToString());
-    }
-
-    private void InputInteractionCancelled()
-    {
-        InteractionResult interactionResult = InteractionResult.Cancelled;
-        Debug.Log("Input Interaction of type " + m_interactionType + " had result " + interactionResult.ToString());
-        ResetInteraction();
-    }
-
-    private void InputInteractionInterrupted()
-    {
-        InteractionResult interactionResult = InteractionResult.Interrupted;
-        Debug.Log("Input Interaction of type " + m_interactionType + " had result " + interactionResult.ToString());
-        ResetInteraction();
-    }
-
-    private void InputInteractionFailed()
-	{
-        m_interacted = true;
-        InteractionResult interactionResult = InteractionResult.Invalid;
-        Debug.LogWarning("Input Interaction of type " + m_interactionType + " had result " + interactionResult.ToString());
-        ResetInteraction();
-    }
-
-    private void InputInteractionSucceeded()
-    {
-        InteractionResult interactionResult = InteractionResult.Success;
-        Debug.Log("Input Interaction of type " + m_interactionType + " had result " + interactionResult.ToString());
-        ResetInteraction();
-    }
-
-    public void InputInteract(InputAction.CallbackContext callbackContext)
+	public void InputInteract(InputAction.CallbackContext callbackContext)
 	{
 		if (callbackContext.canceled)
 		{
-			if (m_interacting)
-			{
-				InputInteractionCancelled();
-			}
-
+			Reset();
 			return;
 		}
 
 		if (!m_interacted && !m_interacting)
 		{
-			if (EnsureMapGrid())
+			FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
+			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool, transform.position))
 			{
-				MapTile tile = m_mapGrid.GetTileAtPos(transform.position);
-                if (tile == null)
+                foreach (ToolData tooldata in m_playerInventory.m_toolDataObjects)
 				{
-					InputInteractionFailed();
-
-					return;
-                }
-
-				FarmingTools.Tool currentTool = m_playerInventory.GetCurrentTool();
-				m_interactionType = tile.GetPlayerInteractionType(currentTool);
-                switch (m_interactionType)
-                {
-					case PlayerInteractionType.None:
-						InputInteractionFailed();
+					if (tooldata.m_tool == tool)
+					{
+                        m_interactionTime = tooldata.m_interactionTime;
 						break;
-                    case PlayerInteractionType.Tile:
-                        foreach (ToolData tooldata in m_playerInventory.m_toolDataObjects)
-                        {
-                            if (tooldata.m_tool == currentTool)
-                            {
-                                m_interactionTime = tooldata.m_interactionTime;
-                                break;
-                            }
-                        }
+                    }
+				}
 
-                        break;
-					case PlayerInteractionType.Crop:
-                        m_interactionTime = tile.GetTimeForCropStep();
-                        break;
-					case PlayerInteractionType.PlantCrop:
-                        m_interactionTime = 0f;
-						break;
-                }
+				m_slider.gameObject.SetActive(true);
 
-				InputInteractionStarted();
+				m_interactionTimer = 0.0f;
+
+                m_interacting = true;
             }
-            else
-			{
-                InputInteractionFailed();
-            }
-        }
+			else
+			{ 
+				// invalid interaction
+				m_interacted = true;
+				Debug.LogWarning("Invalid Interaction: Can't do anything with current tool on active tile.");
+			}
+		}
 	}
 
 	private bool EnsureMapGrid()
@@ -213,12 +149,4 @@ public class PlayerInteraction : MonoBehaviour
 
 		return m_mapGrid != null;
 	}
-
-	public void PlayerEquippedTool()
-	{
-		if (!m_interacting)
-			return;
-
-		InputInteractionInterrupted();
-    }
 }

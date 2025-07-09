@@ -109,54 +109,35 @@ public class MapTile : MonoBehaviour
 		}
 	}
 
-	public PlayerInteractionType GetPlayerInteractionType(FarmingTools.Tool tool)
+	// todo: add an enum value as parameter for the current used tool
+	public void Interact(FarmingTools.Tool tool)
 	{
-        if (!HasValidInteraction(tool))
-            return PlayerInteractionType.None;
+		if (!HasValidInteraction(tool))
+			return;
 
-        switch (tool)
-        {
-            case FarmingTools.Tool.Shovel:
-				return PlayerInteractionType.Tile;
-            case FarmingTools.Tool.Hoe:
-            case FarmingTools.Tool.WateringPot:
-            case FarmingTools.Tool.Sickle:
-				return PlayerInteractionType.Crop;
-            case FarmingTools.Tool.PlantingTool:
-				return PlayerInteractionType.PlantCrop;
-        }
-
-        return PlayerInteractionType.None;
-	}
-
-	public void PlayerInteractionFinished(FarmingTools.Tool tool)
-	{
 		switch (tool)
 		{
-			case FarmingTools.Tool.None:
-				break;
-            case FarmingTools.Tool.Shovel:
+			case FarmingTools.Tool.Shovel:
 				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.WateringPot:
 			case FarmingTools.Tool.Sickle:
-				m_crop.ChangeCrop(tool);
+				m_crop.Interact(tool);
 				break;
 			case FarmingTools.Tool.PlantingTool:
 				m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
 				break;
+			default:
+				break;
 		}
 	}
 
-	public float GetTimeForCropStep()
-	{
-		return m_crop.GetTimeForCropStep();
-	}
 	public bool HasValidInteraction(FarmingTools.Tool tool)
 	{
 		switch (tool)
 		{
+			
 			case FarmingTools.Tool.Shovel:
 				return m_currentTileType == TileTypes.Enum.Grass;
 			case FarmingTools.Tool.Hoe:
