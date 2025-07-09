@@ -12,6 +12,7 @@ public class PlayerInventory : MonoBehaviour
     private Dictionary<FarmingTools.Tool, GameObject> m_spawnedTools = new Dictionary<FarmingTools.Tool, GameObject>();
     private Transform m_toolSocket;
     private InventoryPanel m_inventoryPanel;
+    private PlayerInteraction m_playerInteraction;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +21,13 @@ public class PlayerInventory : MonoBehaviour
         if (m_inventoryPanel == null)
         {
             Debug.LogError("Failed to find InventoryPanel");
+            return;
+        }
+
+        m_playerInteraction = GetComponent<PlayerInteraction>();
+        if (m_playerInteraction == null)
+        {
+            Debug.LogError("Failed to find PlayerInteraction");
             return;
         }
 
@@ -54,6 +62,7 @@ public class PlayerInventory : MonoBehaviour
         if (m_currentTool != FarmingTools.Tool.None)
         {
             m_spawnedTools[m_currentTool].SetActive(false);
+            m_playerInteraction.PlayerEquippedTool();
         }
 
         if (tool != FarmingTools.Tool.None)
