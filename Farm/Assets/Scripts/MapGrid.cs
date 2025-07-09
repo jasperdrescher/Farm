@@ -208,7 +208,7 @@ public class MapGrid : MonoBehaviour
 		return new Vector2(Mathf.Round((halfW + worldPos.x) / m_tileSize.x), Mathf.Round((halfH + worldPos.z) / m_tileSize.y));
 	}
 
-	MapTile GetTileAtPos(Vector3 worldPos)
+	public MapTile GetTileAtPos(Vector3 worldPos)
 	{ 
 		int idx = GetIndexForGridPosition(GetGridPosFromWorldPos(worldPos));
 		return (idx < m_tiles.Length && idx >= 0) ? m_tiles[idx] : null;
@@ -233,15 +233,6 @@ public class MapGrid : MonoBehaviour
 		MapTile tile = GetTileAtPos(interactionPosition);
 		tile?.Interact(tool);
 	}
-
-	/* todo: replace this for Tool highlight
-	public void SetActiveTile(MapTile tile)
-	{ 
-		m_currentActiveTile = tile;
-
-		FindFirstObjectByType<InventoryPanel>().HighlightAvailableTools(tile);
-	}
-	*/
 
 	void OnDrawGizmos()
 	{

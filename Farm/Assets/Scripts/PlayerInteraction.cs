@@ -7,11 +7,13 @@ public class PlayerInteraction : MonoBehaviour
 	public float m_interactionTime = 1.0f; // length of the interaction progressbar.
 
 	private MapGrid m_mapGrid = null;
+	private MapTile m_ActiveTile = null;
 	private PlayerInventory m_playerInventory = null;
 	private Slider m_slider = null;
 	private float m_interactionTimer = 0.0f;
 	private bool m_interacting = false;
 	private bool m_interacted = false;
+	private Vector3 m_playerPositionCacheForActiveTile = Vector3.zero;
 	private Animator m_animator;
 
 	void Start()
@@ -49,7 +51,35 @@ public class PlayerInteraction : MonoBehaviour
 				}
 			}
 		}
-    }
+
+		UpdateActiveTile();
+	}
+
+	void UpdateActiveTile()
+	{ 
+		Vector3 pos = transform.position;
+
+		if (m_playerPositionCacheForActiveTile == pos)
+			return;
+
+		if (Vector3.Distance(pos, m_playerPositionCacheForActiveTile) < 0.5f)
+			return;
+
+		m_playerPositionCacheForActiveTile = pos;
+
+		MapTile prevTile = m_ActiveTile;
+
+		if (EnsureMapGrid())
+			m_ActiveTile = m_mapGrid.GetTileAtPos(pos);
+
+		if (prevTile != m_ActiveTile)
+			OnActiveTileChanged(m_ActiveTile);
+	}
+
+	private void OnActiveTileChanged(MapTile tile)
+	{
+		FindFirstObjectByType<InventoryPanel>().HighlightAvailableTools(tile);
+	}
 
 	public bool IsInteracting()
 	{ 
