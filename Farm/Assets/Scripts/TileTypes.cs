@@ -5,5 +5,8 @@ namespace TileTypes
 		None,
 		Grass,
 		FarmField,
+		WetGround,
+		HalfWetGround,
+		DryGround,
 	}
 }

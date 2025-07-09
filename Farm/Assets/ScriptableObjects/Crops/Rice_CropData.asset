@@ -15,15 +15,10 @@ MonoBehaviour:
   m_type: 7
   m_name: Rice
   m_steps:
-  - m_stepPrefab: {fileID: 1001826626524757325, guid: 4fb89e401ac78e548929f50b6cd80c0e, type: 3}
-    m_timeUntilNextStep: 0
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 4842147528724362511, guid: 710f0034b4d286f4eb6242c27c435cba, type: 3}
-    m_timeUntilNextStep: 60
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 3332867899088362136, guid: c1f61d4e84e4d9c44a9afc8952baafd7, type: 3}
-    m_timeUntilNextStep: 180
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 7765417763508016031, guid: c103538c1c1540142ac2547d78a5c48a, type: 3}
-    m_timeUntilNextStep: 300
-    m_requiredTool: 4
+  - {fileID: 1001826626524757325, guid: 4fb89e401ac78e548929f50b6cd80c0e, type: 3}
+  - {fileID: 4842147528724362511, guid: 710f0034b4d286f4eb6242c27c435cba, type: 3}
+  - {fileID: 3332867899088362136, guid: c1f61d4e84e4d9c44a9afc8952baafd7, type: 3}
+  - {fileID: 7765417763508016031, guid: c103538c1c1540142ac2547d78a5c48a, type: 3}
+  m_growTime: 600
+  m_harvestTool: 4
+  m_harvestRewards: []

@@ -14,20 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_type: 1
   m_name: Potato
-  m_cropPrefab: {fileID: 5365773161637793889, guid: a8d2b623ac9922349bc7fe02bd814b71, type: 3}
   m_steps:
-  - m_stepPrefab: {fileID: 2400506870180779364, guid: 2e8d245fb9c9fdb46870fc5227ac896c, type: 3}
-    m_timeUntilNextStep: 0
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 3469476056103970346, guid: 6d362eca7b39095468bbad9378405387, type: 3}
-    m_timeUntilNextStep: 60
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 3636282572885778350, guid: 09eaebfa888ca46449cf556956b85f2a, type: 3}
-    m_timeUntilNextStep: 180
-    m_requiredTool: 3
-  - m_stepPrefab: {fileID: 1002660021130484208, guid: 0ffe6dae4f719d340a0d86278ac7d423, type: 3}
-    m_timeUntilNextStep: 300
-    m_requiredTool: 4
+  - {fileID: 2400506870180779364, guid: 2e8d245fb9c9fdb46870fc5227ac896c, type: 3}
+  - {fileID: 3469476056103970346, guid: 6d362eca7b39095468bbad9378405387, type: 3}
+  - {fileID: 3636282572885778350, guid: 09eaebfa888ca46449cf556956b85f2a, type: 3}
+  - {fileID: 1002660021130484208, guid: 0ffe6dae4f719d340a0d86278ac7d423, type: 3}
+  m_growTime: 300
+  m_harvestTool: 4
   m_harvestRewards:
   - m_inventoryItem: {fileID: 11400000, guid: 8143daef4839fcd40bf2ccd22e310527, type: 2}
     m_amountMinMax: {x: 4, y: 8}

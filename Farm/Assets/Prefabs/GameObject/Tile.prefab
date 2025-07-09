@@ -48,7 +48,12 @@ MonoBehaviour:
   m_tileTypes:
   - {fileID: 11400000, guid: 7c6fac4f87f7c9e44bf7aa8fe9e993ce, type: 2}
   - {fileID: 11400000, guid: 7a83625f61933a643baa4459ad969c35, type: 2}
+  - {fileID: 11400000, guid: 043bf87eceb58604dbfe4cb9a157b0e0, type: 2}
+  - {fileID: 11400000, guid: 0b97d0a0e913f874e95767b503788d19, type: 2}
+  - {fileID: 11400000, guid: 63de1973486a35447a07cecb650f76f4, type: 2}
   m_cropPrefab: {fileID: 3172157940837972674, guid: ff632a95313adb544b03c74c56bfa2cc, type: 3}
+  m_groundDryTime: 120
+  m_DryStages: 050000000400000003000000
   m_editorTileTypeChanger: 0
 --- !u!65 &1180436350199222392
 BoxCollider:

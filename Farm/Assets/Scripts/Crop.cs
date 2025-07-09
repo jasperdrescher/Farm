@@ -12,7 +12,7 @@ public class Crop : MonoBehaviour
 
 	[Header("Editor")]
 	public CropTypes.Enum m_editorCropTypeChanger = CropTypes.Enum.None;
-	public int m_editorCropStepChanger = 0;
+	[Range(0f, 1f)] public float m_editorCropProgressChanger = 1.0f;
 
 	#region private
 	private CropRuntime m_runtime = null;
@@ -38,6 +38,9 @@ public class Crop : MonoBehaviour
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
 #endif
+
+		HandleCropGrowthTimer();
+		HandleCropGrowVisual();
 	}
 
 	public void CreateCropTypes()
@@ -50,9 +53,9 @@ public class Crop : MonoBehaviour
 				continue;
 
 			List<GameObject> visuals = new List<GameObject>();
-			foreach (CropGrowStep step in cropData.m_steps)
+			foreach (GameObject step in cropData.m_steps)
 			{
-				GameObject go = Instantiate(step.m_stepPrefab, transform);
+				GameObject go = Instantiate(step, transform);
 				go.SetActive(false);
 				visuals.Add(go);
 
@@ -86,8 +89,8 @@ public class Crop : MonoBehaviour
 		if (m_editorCropTypeChanger != m_currentCropType)
 			ChangeCropType(m_editorCropTypeChanger);
 
-		if (m_runtime && m_editorCropStepChanger != m_runtime.m_currentStep)
-			ChangeCropStep(m_editorCropStepChanger);
+		if (m_runtime && m_editorCropProgressChanger != m_runtime.GetTimerProgress())
+			ChangeCropProgress(m_editorCropProgressChanger);
 	}
 #endif
 
@@ -101,7 +104,7 @@ public class Crop : MonoBehaviour
 			m_currentCropType = CropTypes.Enum.None;
 			m_editorCropTypeChanger = m_currentCropType;
 			m_runtime.m_currentStep = 0;
-			m_editorCropStepChanger = m_runtime.m_currentStep;
+			m_editorCropProgressChanger = 0.0f;
 			return;
 		}
 
@@ -109,25 +112,30 @@ public class Crop : MonoBehaviour
 		m_editorCropTypeChanger = type;
 
 		m_runtime.m_currentStep = 0;
-		m_editorCropStepChanger = m_runtime.m_currentStep;
+		m_editorCropProgressChanger = 0.0f;
 
 		m_runtime.Init(GetCropData());
 		GetCropData();
-		ChangeCropStep(m_runtime.m_currentStep);
 	}
 
-	// [FIXME] this should not be public
-	public void ChangeCropStep(int step)
+	public void ChangeCropProgress(float progress)
+	{
+		float p = Mathf.Clamp01(progress);
+
+		m_editorCropProgressChanger = p;
+		if(m_runtime != null)
+			m_runtime.OverrideTimer(p);
+	}
+
+	private void ChangeCropStep(int step)
 	{
 		if (m_currentCropType == CropTypes.Enum.None)
 		{
 			m_runtime.m_currentStep = 0;
-			m_editorCropStepChanger = m_runtime.m_currentStep;
 			return;
 		}
 
 		m_runtime.m_currentStep = Mathf.Clamp(step, 0, m_visuals[m_currentCropType].Count - 1);
-		m_editorCropStepChanger = m_runtime.m_currentStep;
 
 		if (m_runtime.m_currentStep >= m_visuals[m_currentCropType].Count)
 		{
@@ -176,6 +184,7 @@ public class Crop : MonoBehaviour
 
 		m_runtime.Init(GetCropData());
 		ChangeCropType(type);
+		m_runtime.StartTimerForCurrentCrop();
 	}
 
 	public void Interact(FarmingTools.Tool tool)
@@ -187,19 +196,9 @@ public class Crop : MonoBehaviour
 			return;
 
 		CropData cropData = GetCropData();
-		if (m_runtime.m_currentStep < cropData.GetLastStepIndex())
+		if (m_runtime.GetTimerProgress() == 1.0f)
 		{
-			FarmingTools.Tool currentRequiredTool = cropData.m_steps[m_runtime.m_currentStep].m_requiredTool;
-			if (tool == currentRequiredTool)
-			{
-				ChangeCropStep(m_runtime.m_currentStep + 1);
-
-				m_runtime.StartTimerForCurrentStep();	
-			}
-		}
-		else if (m_runtime.m_currentStep == cropData.GetLastStepIndex())
-		{
-			// todo harvest
+			// todo harvest, rewwards, etc
 			ChangeCropType(CropTypes.Enum.None);
 		}
 	}
@@ -212,10 +211,9 @@ public class Crop : MonoBehaviour
 		if (m_runtime.IsTimerEnabled())
 			return false;
 
-		CropData cropData = GetCropData();
-		if (m_runtime.m_currentStep < cropData.GetLastStepIndex())
+		if (m_runtime.GetTimerProgress() == 1.0f)
 		{
-			FarmingTools.Tool currentRequiredTool = cropData.m_steps[m_runtime.m_currentStep].m_requiredTool;
+			FarmingTools.Tool currentRequiredTool = GetCropData().m_harvestTool;
 			return tool == currentRequiredTool;
 		}
 
@@ -239,10 +237,61 @@ public class Crop : MonoBehaviour
 			bool result = m_runtime.LoadState(data.m_runtime);
 			if (!result)
 				return false;
-
-			ChangeCropStep(m_runtime.m_currentStep);
 		}
 
 		return true;
+	}
+
+	void HandleCropGrowthTimer()
+	{
+		if (m_runtime == null || m_ownerMapTile == null)
+			return;
+
+		if (!HasAnythingPlanted()) 
+			return;
+
+		m_runtime.SetTimerPaused(!m_ownerMapTile.IsGroundWet());		
+	}
+
+	void HandleCropGrowVisual()
+	{
+		if (m_runtime == null || m_ownerMapTile == null)
+			return;
+
+		if (!HasAnythingPlanted())
+			return;
+
+		CropData data = m_runtime.m_data;
+		if (data.m_steps.Length == 0)
+			return;
+
+		int targetStep = 0;
+		if (data.m_steps.Length > 2) 
+		{
+			//we need at least 3... 0 only show for 0%, last only for 100%. distribute others between
+
+			float p = m_runtime.GetTimerProgress();
+			if (p > 0.0f && p < 1.0f)
+			{
+				int s = data.m_steps.Length - 2;
+				float sections = 1.0f / s;
+				for (int i = 0; i < s; i++)
+				{
+					if (p > i * sections)
+						targetStep = i + 1;
+					else 
+						break;
+				}
+			}
+			else if(p == 1.0f)
+			{
+				targetStep = data.m_steps.Length - 1;
+			}
+		}
+
+		if (m_runtime.m_currentStep != targetStep)
+		{
+			ChangeCropStep(targetStep);
+		}
 	}
 }

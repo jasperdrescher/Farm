@@ -5,12 +5,18 @@ using System;
 [ExecuteInEditMode]
 public class MapTile : MonoBehaviour
 {
-	[Header("Setup")]
+	[Header("Global Setup")]
 	public List<TileData> m_tileTypes;
 	public GameObject m_cropPrefab;
 
+	[Header("Tile Config")]
+	[Min(0f)] public float m_groundDryTime = 120.0f;
+	public TileTypes.Enum[] m_DryStages;
+	[Min(0f)] public float m_minimumWateringTreshold = 0.8f;
+
 	[Header("Editor")]
 	public TileTypes.Enum m_editorTileTypeChanger = TileTypes.Enum.None;
+	public float m_debug_ground_wetness = 0.0f;
 
 	#region private
 	private MapGrid m_ownerGrid = null;
@@ -19,6 +25,7 @@ public class MapTile : MonoBehaviour
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
 	private int m_index = 0;
+	private float m_timeSinceLastWatering = 0;
 	#endregion
 
 	[Serializable]
@@ -27,6 +34,7 @@ public class MapTile : MonoBehaviour
 		public int m_index;
 		public TileTypes.Enum m_tileType;
 		public Crop.SaveData m_crop;
+		public float m_timeSinceLastWatering;
 	};
 
 	void Start()
@@ -54,6 +62,8 @@ public class MapTile : MonoBehaviour
 			GameObject go = Instantiate(tileData.m_prefab, transform);
 			go.SetActive(false);
 
+			go.name = tileData.m_tileType.ToString();
+
 			MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
 			if (meshRenderer != null)
 				meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -79,7 +89,10 @@ public class MapTile : MonoBehaviour
     {
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
+		m_debug_ground_wetness = GetGroundWaterLevel();
 #endif
+
+		HandleGroundDryness();
 	}
 
 #if UNITY_EDITOR
@@ -121,13 +134,18 @@ public class MapTile : MonoBehaviour
 				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
 			case FarmingTools.Tool.Hoe:
-			case FarmingTools.Tool.WateringPot:
 			case FarmingTools.Tool.Sickle:
 				m_crop.Interact(tool);
 				break;
-			case FarmingTools.Tool.PlantingTool:
-				m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
+			case FarmingTools.Tool.WateringPot:
+				WaterGround();
 				break;
+			case FarmingTools.Tool.PlantingTool:
+				{
+					m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
+					DryGound();
+					break;
+				}
 			default:
 				break;
 		}
@@ -137,15 +155,15 @@ public class MapTile : MonoBehaviour
 	{
 		switch (tool)
 		{
-			
 			case FarmingTools.Tool.Shovel:
 				return m_currentTileType == TileTypes.Enum.Grass;
 			case FarmingTools.Tool.Hoe:
-			case FarmingTools.Tool.WateringPot:
 			case FarmingTools.Tool.Sickle:
-				return m_currentTileType == TileTypes.Enum.FarmField && m_crop.HasValidInteraction(tool);
+				return m_crop != null && m_crop.HasValidInteraction(tool);
+			case FarmingTools.Tool.WateringPot:
+				return m_crop != null && m_crop.HasAnythingPlanted() && CanWaterGround();
 			case FarmingTools.Tool.PlantingTool:
-				return m_currentTileType == TileTypes.Enum.FarmField && !m_crop.HasAnythingPlanted();
+				return m_currentTileType == TileTypes.Enum.FarmField && m_crop && !m_crop.HasAnythingPlanted();
 			default:
 				break;
 		}
@@ -172,13 +190,13 @@ public class MapTile : MonoBehaviour
 	}
 
 	// [FIXME] this was made for map generation
-	public void OverrideCrop(CropTypes.Enum type, int step)
+	public void OverrideCrop(CropTypes.Enum type, float progress)
 	{
 		if (!m_crop)
 			return;
 
 		m_crop.ChangeCropType(type);
-		m_crop.ChangeCropStep(step);
+		m_crop.ChangeCropProgress(progress);
 	}
 
 	public bool SaveState(MapTile.SaveData data)
@@ -208,5 +226,74 @@ public class MapTile : MonoBehaviour
 		}
 
 		return true;
+	}
+
+	public bool IsGroundWet()
+	{ 
+		return GetGroundWaterLevel() > 0.0f;	
+	}
+
+	private float GetGroundWaterLevel()
+	{
+		float p = 1.0f - Mathf.Clamp(m_timeSinceLastWatering / m_groundDryTime, 0.0f, 1.0f);
+		// 1 = wet, 0 dry
+		return p;
+	}
+
+	private void HandleGroundDryness()
+	{
+		if (m_crop == null || !m_crop.HasAnythingPlanted())
+			return;
+
+		m_timeSinceLastWatering += Time.deltaTime;
+		float p = GetGroundWaterLevel();
+
+		int stages = m_DryStages.Length;
+		if (stages == 0)
+			return; // nothing to do here...
+
+		TileTypes.Enum targetTileType = m_DryStages[0];
+		if (stages > 1)
+		{
+			float sections = 1.0f / (stages - 1);
+			for (int i = 0; i < (stages - 1); i++)
+			{
+				if (p > (i * sections))
+					targetTileType = m_DryStages[i + 1];
+				else
+					break;
+			}
+		}
+
+		if (m_currentTileType == targetTileType)
+			return;
+
+		ChangeTileType(targetTileType);
+	}
+
+	private void DryGound()
+	{
+		m_timeSinceLastWatering = m_groundDryTime + 1.0f;
+	}
+
+	private void WaterGround()
+	{
+		m_timeSinceLastWatering = 0.0f;
+
+		int stages = m_DryStages.Length;
+		if (stages == 0)
+			return; // nothing to do here...
+
+		TileTypes.Enum wetGround = m_DryStages[stages - 1];
+
+		if (m_currentTileType == wetGround)
+			return;
+
+		ChangeTileType(wetGround);
+	}
+
+	private bool CanWaterGround()
+	{ 
+		return GetGroundWaterLevel() < m_minimumWateringTreshold;
 	}
 }

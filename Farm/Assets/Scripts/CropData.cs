@@ -5,17 +5,10 @@ public class CropData : ScriptableObject
 {
 	public CropTypes.Enum m_type;
 	public string m_name;
-	public GameObject m_cropPrefab;
 
-	[System.Serializable]
-	public class CropGrowStep
-	{
-		public GameObject m_stepPrefab;
-		public float m_timeUntilNextStep = 0;
-		public FarmingTools.Tool m_requiredTool;
-	}
-
-	public CropGrowStep[] m_steps;
+	public GameObject[] m_steps;
+	[Min(0f)] public float m_growTime;
+	public FarmingTools.Tool m_harvestTool;
 
 	[System.Serializable]
 	public class HarvestRewards

@@ -22,7 +22,7 @@ public class MapGrid : MonoBehaviour
 		public Color m_pixelColor = Color.white;
 		public TileTypes.Enum m_tileType = TileTypes.Enum.None;
 		public CropTypes.Enum m_cropType = CropTypes.Enum.None;
-		public int m_cropStep = 0;
+		public float m_cropProgress = 1.0f;
 	}
 
 	public TileTypes.Enum m_defaultTileType;
@@ -171,7 +171,7 @@ public class MapGrid : MonoBehaviour
 					{
 						if (cced.m_cropType != CropTypes.Enum.None)
 						{
-							mapTile.OverrideCrop(cced.m_cropType, cced.m_cropStep);
+							mapTile.OverrideCrop(cced.m_cropType, cced.m_cropProgress);
 						}
 					}
 				}
