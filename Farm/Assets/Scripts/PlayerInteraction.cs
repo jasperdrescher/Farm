@@ -42,7 +42,7 @@ public class PlayerInteraction : MonoBehaviour
 				{
 					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
 					m_mapGrid.Interact(tool, transform.position);
-
+					OnActiveTileChanged(m_ActiveTile);
 					Reset();
 				}
 				else
