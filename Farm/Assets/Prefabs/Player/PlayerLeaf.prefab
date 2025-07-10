@@ -503,6 +503,9 @@ PrefabInstance:
       addedObject: {fileID: 3476256975515894792}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
       insertIndex: -1
+      addedObject: {fileID: -2956029674526343803}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1338947933482950525}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7f27741787b69d4986449eaafd06acb, type: 3}
       insertIndex: -1
@@ -570,6 +573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentTool: 0
+  m_TempDebugInventoryItem: {fileID: 11400000, guid: 8143daef4839fcd40bf2ccd22e310527, type: 2}
   m_toolDataObjects:
   - {fileID: 11400000, guid: 72b750273bbf74a4484a0a2b70ae2cfd, type: 2}
   - {fileID: 11400000, guid: c69f20168d0748743b4c94bc53d70099, type: 2}
@@ -753,6 +757,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7986891340690510551}
+        m_TargetAssemblyTypeName: PlayerInventory, Assembly-CSharp
+        m_MethodName: InputToggleInventory
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3746d397-1964-4b74-8b64-b3a314796a88
+    m_ActionName: 'Player/Inventory[/Keyboard/i]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -771,6 +791,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_interactionTime: 1
+--- !u!114 &-2956029674526343803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923777212302239529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a91a710f57c134d82ee60ed70083f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &1338947933482950525
 CapsuleCollider:
   m_ObjectHideFlags: 0

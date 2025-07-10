@@ -7,11 +7,16 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField]
     private FarmingTools.Tool m_currentTool;
 
+    [SerializeField]
+    private InventoryItem m_TempDebugInventoryItem;
+
     public List<ToolData> m_toolDataObjects;
 
     private Dictionary<FarmingTools.Tool, GameObject> m_spawnedTools = new Dictionary<FarmingTools.Tool, GameObject>();
+    private List<InventoryItem> m_inventoryItems = new List<InventoryItem>();
     private Transform m_toolSocket;
     private InventoryPanel m_inventoryPanel;
+    private CropPanel m_cropPanel;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +25,13 @@ public class PlayerInventory : MonoBehaviour
         if (m_inventoryPanel == null)
         {
             Debug.LogError("Failed to find InventoryPanel");
+            return;
+        }
+
+        m_cropPanel = FindFirstObjectByType<CropPanel>();
+        if (m_cropPanel == null)
+        {
+            Debug.LogError("Failed to find CropPanel");
             return;
         }
 
@@ -42,14 +54,18 @@ public class PlayerInventory : MonoBehaviour
         }
 
         EquipTool(FarmingTools.Tool.None);
+
+        // TODO: Remove when we can pick up or load inventory items
+        m_inventoryItems.Add(m_TempDebugInventoryItem);
+        m_inventoryPanel.gameObject.SetActive(false);
     }
 
-	public FarmingTools.Tool GetCurrentTool()
-	{
-		return m_currentTool;
-	}
+    public FarmingTools.Tool GetCurrentTool()
+    {
+        return m_currentTool;
+    }
 
-	public void EquipTool(FarmingTools.Tool tool)
+    public void EquipTool(FarmingTools.Tool tool)
     {
         if (m_currentTool != FarmingTools.Tool.None)
         {
@@ -108,5 +124,10 @@ public class PlayerInventory : MonoBehaviour
         }
 
         EquipTool(nextTool);
+    }
+
+    public void InputToggleInventory(InputAction.CallbackContext callbackContext)
+    {
+        m_cropPanel.ToggleInventory();
     }
 }
