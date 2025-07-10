@@ -120,7 +120,6 @@ public class Crop : MonoBehaviour
 		m_editorCropProgressChanger = 0.0f;
 
 		m_runtime.Init(GetCropData());
-		GetCropData();
 	}
 
 	public void ChangeCropProgress(float progress)
@@ -202,9 +201,7 @@ public class Crop : MonoBehaviour
 		if (HasAnythingPlanted())
 			return;
 
-		m_runtime.Init(GetCropData());
 		ChangeCropType(type);
-		m_runtime.StartTimerForCurrentCrop();
 	}
 
 	public void Interact(FarmingTools.Tool tool)
@@ -253,7 +250,10 @@ public class Crop : MonoBehaviour
 
 			bool result = m_runtime.LoadState(data.m_runtime);
 			if (!result)
+			{
+				Debug.LogError("Faield to load Crop runtime for Tile:" + GetOwnerTileIndex());
 				return false;
+			}
 		}
 
 		return true;
