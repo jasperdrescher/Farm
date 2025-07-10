@@ -57,7 +57,7 @@ public class PlayerInventory : MonoBehaviour
 
         // TODO: Remove when we can pick up or load inventory items
         m_inventoryItems.Add(m_TempDebugInventoryItem);
-        m_inventoryPanel.gameObject.SetActive(false);
+        m_cropPanel.gameObject.SetActive(false);
     }
 
     public FarmingTools.Tool GetCurrentTool()
