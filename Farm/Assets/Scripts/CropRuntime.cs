@@ -8,7 +8,7 @@ public class CropRuntime : MonoBehaviour
 
 	[SerializeField] private bool m_timerEnabled = false;
 	[SerializeField] private float m_elapsedTime = 0.0f;
-	[SerializeField] private float m_targetTime = -1.0f;
+	[SerializeField] private float m_targetTime = 0.0f;
 
 	private Crop m_ownerCrop = null;
 	public CropData m_data = null;
@@ -18,14 +18,13 @@ public class CropRuntime : MonoBehaviour
 	public class SaveData
 	{
 		public int m_currentStep = 0;
-		public float m_timerProgress = -1.0f;
+		public float m_timerProgress = 0.0f;
 	}
 
 	[SerializeField] private float m_debug_progress = 0.0f;
 
 	void Start()
     {
-		Reset();
 		m_ownerCrop = GetComponent<Crop>();
 	}
 
@@ -38,22 +37,11 @@ public class CropRuntime : MonoBehaviour
 #endif
 	}
 
-	public void Reset()
-	{
-		m_currentStep = 0;
-		ResetTimer();
-	}
-
 	public void Init(CropData cropData)
 	{ 
 		m_data = cropData;
-		ResetTimer();
-	}
 
-	public void StartTimerForCurrentCrop()
-	{
-		float t = m_data.m_growTime;
-		m_timerEnabled = t > 0.0f;
+		float t = m_data != null ? m_data.m_growTime : 0.0f;
 		m_elapsedTime = 0.0f;
 		m_targetTime = t;
 	}
@@ -64,13 +52,6 @@ public class CropRuntime : MonoBehaviour
 			return;
 
 		m_timerEnabled = !v;
-	}
-
-	void ResetTimer()
-	{
-		m_timerEnabled = false;
-		m_elapsedTime = 0.0f;
-		m_targetTime = -1.0f;
 	}
 
 	void HandleTimer()
@@ -86,7 +67,7 @@ public class CropRuntime : MonoBehaviour
 
 	public float GetTimerProgress()
 	{
-		return Mathf.Clamp(m_elapsedTime / m_targetTime, 0.0f, 1.0f);
+		return m_targetTime > 0.0f ? Mathf.Clamp(m_elapsedTime / m_targetTime, 0.0f, 1.0f) : 0.0f;
 	}
 
 	public void OverrideTimer(float progress)
@@ -117,7 +98,6 @@ public class CropRuntime : MonoBehaviour
 
 		m_currentStep = step;
 
-		StartTimerForCurrentCrop();
 		m_elapsedTime = m_targetTime * data.m_timerProgress;
 		
 		return true;

@@ -193,7 +193,7 @@ public class MapTile : MonoBehaviour
 	// [FIXME] this was made for map generation
 	public void OverrideCrop(CropTypes.Enum type, float progress)
 	{
-		if (!m_crop)
+		if (m_crop == null)
 			return;
 
 		m_crop.ChangeCropType(type);
