@@ -78,7 +78,12 @@ public class PlayerInteraction : MonoBehaviour
 
 	private void OnActiveTileChanged(MapTile tile)
 	{
-		FindFirstObjectByType<InventoryPanel>().HighlightAvailableTools(tile);
+		if (tile != null)
+		{
+			InventoryPanel panel = FindFirstObjectByType<InventoryPanel>();
+			if(panel != null)
+				panel.HighlightAvailableTools(tile);
+		}
 	}
 
 	public bool IsInteracting()

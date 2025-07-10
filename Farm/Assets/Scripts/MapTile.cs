@@ -45,6 +45,7 @@ public class MapTile : MonoBehaviour
 	{
 		m_index = index;
 		m_ownerGrid = owner;
+		m_timeSinceLastWatering = m_groundDryTime;
 		CreateTileTypes();
 		CreateCrop();
 
@@ -204,6 +205,8 @@ public class MapTile : MonoBehaviour
 		data.m_index = m_index;
 		data.m_tileType = m_currentTileType;
 
+		data.m_timeSinceLastWatering = m_timeSinceLastWatering < m_groundDryTime ? m_timeSinceLastWatering : -1.0f;
+
 		data.m_crop = new Crop.SaveData();
 
 		bool result = m_crop.SaveState(data.m_crop);
@@ -217,6 +220,8 @@ public class MapTile : MonoBehaviour
 
 	public bool LoadState(MapTile.SaveData data)
 	{
+		m_timeSinceLastWatering = data.m_timeSinceLastWatering < 0 ? m_groundDryTime : data.m_timeSinceLastWatering;
+
 		ChangeTileType(data.m_tileType);
 
 		bool result = m_crop.LoadState(data.m_crop);
@@ -245,7 +250,9 @@ public class MapTile : MonoBehaviour
 		if (m_crop == null || !m_crop.HasAnythingPlanted())
 			return;
 
-		m_timeSinceLastWatering += Time.deltaTime;
+		if(m_timeSinceLastWatering <= m_groundDryTime)
+			m_timeSinceLastWatering += Time.deltaTime;
+
 		float p = GetGroundWaterLevel();
 
 		int stages = m_DryStages.Length;

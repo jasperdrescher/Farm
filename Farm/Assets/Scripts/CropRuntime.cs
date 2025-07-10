@@ -63,7 +63,7 @@ public class CropRuntime : MonoBehaviour
 		if (m_targetTime < 0.0f)
 			return;
 
-		m_timerEnabled = v;
+		m_timerEnabled = !v;
 	}
 
 	void ResetTimer()
@@ -105,18 +105,21 @@ public class CropRuntime : MonoBehaviour
 
 	public bool LoadState(CropRuntime.SaveData data)
 	{
+		if (m_data == null)
+		{
+			Debug.LogError("CropRuntime needs to be initialized, before load. Tile: " + m_ownerCrop.GetOwnerTileIndex());
+			return false;
+		}
+
 		int step = data.m_currentStep;
 		if (step < 0 || step > m_data.GetLastStepIndex())
 			return false;
 
 		m_currentStep = step;
 
-		if (data.m_timerProgress >= 0.0f)
-		{
-			StartTimerForCurrentCrop();
-			m_elapsedTime = m_targetTime * data.m_timerProgress;
-		}
-
+		StartTimerForCurrentCrop();
+		m_elapsedTime = m_targetTime * data.m_timerProgress;
+		
 		return true;
 	}
 }

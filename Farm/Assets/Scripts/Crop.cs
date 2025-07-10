@@ -19,6 +19,8 @@ public class Crop : MonoBehaviour
 	private MapTile m_ownerMapTile = null;
 	private CropTypes.Enum m_currentCropType = CropTypes.Enum.None;
 	private Dictionary<CropTypes.Enum, List<GameObject>> m_visuals = new Dictionary<CropTypes.Enum, List<GameObject>>();
+
+	private float m_editorCropProgressChangerBuffer = 1.0f;
 	#endregion
 
 	[Serializable]
@@ -89,8 +91,11 @@ public class Crop : MonoBehaviour
 		if (m_editorCropTypeChanger != m_currentCropType)
 			ChangeCropType(m_editorCropTypeChanger);
 
-		if (m_runtime && m_editorCropProgressChanger != m_runtime.GetTimerProgress())
+		if (m_runtime && m_editorCropProgressChanger != m_editorCropProgressChangerBuffer)
+		{
+			m_editorCropProgressChangerBuffer = m_editorCropProgressChanger;
 			ChangeCropProgress(m_editorCropProgressChanger);
+		}
 	}
 #endif
 
@@ -122,9 +127,24 @@ public class Crop : MonoBehaviour
 	{
 		float p = Mathf.Clamp01(progress);
 
+#if UNITY_EDITOR
 		m_editorCropProgressChanger = p;
+		m_editorCropProgressChangerBuffer = p;
+#endif
+
 		if(m_runtime != null)
 			m_runtime.OverrideTimer(p);
+	}
+
+	private bool IsStepActive(int step)
+	{
+		if (m_currentCropType == CropTypes.Enum.None || m_visuals.ContainsKey(m_currentCropType) == false)
+			return false;
+
+		if (step < 0 || step >= m_visuals[m_currentCropType].Count)
+			return false;
+
+		return m_visuals[m_currentCropType][step].activeSelf;
 	}
 
 	private void ChangeCropStep(int step)
@@ -208,12 +228,9 @@ public class Crop : MonoBehaviour
 		if (!HasAnythingPlanted())
 			return false;
 
-		if (m_runtime.IsTimerEnabled())
-			return false;
-
-		if (m_runtime.GetTimerProgress() == 1.0f)
+		if (m_runtime != null && m_runtime.GetTimerProgress() == 1.0f)
 		{
-			FarmingTools.Tool currentRequiredTool = GetCropData().m_harvestTool;
+			FarmingTools.Tool currentRequiredTool = m_runtime.m_data.m_harvestTool;
 			return tool == currentRequiredTool;
 		}
 
@@ -289,9 +306,14 @@ public class Crop : MonoBehaviour
 			}
 		}
 
-		if (m_runtime.m_currentStep != targetStep)
+		if (!IsStepActive(targetStep))
 		{
 			ChangeCropStep(targetStep);
 		}
+	}
+
+	public int GetOwnerTileIndex()
+	{ 
+		return m_ownerMapTile != null ? m_ownerMapTile.GetIndex() : -1;
 	}
 }
