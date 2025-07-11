@@ -124,32 +124,35 @@ public class MapTile : MonoBehaviour
 	}
 
 	// todo: add an enum value as parameter for the current used tool
-	public void Interact(InteractionContext context)
+	public InteractionResult Interact(InteractionContext context)
 	{
 		if (!HasValidInteraction(context))
-			return;
+			return InteractionResult.Failure();
 
 		switch (context.m_tool)
 		{
 			case FarmingTools.Tool.Shovel:
-				ChangeTileType(TileTypes.Enum.FarmField);
-				break;
+				{
+					ChangeTileType(TileTypes.Enum.FarmField);
+					return InteractionResult.Success();
+				}
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Sickle:
-				m_crop.Interact(context.m_tool);
-				break;
+					return m_crop.Interact(context.m_tool);
 			case FarmingTools.Tool.WateringPot:
-				WaterGround();
-				break;
+				{
+					WaterGround();
+					return InteractionResult.Success();
+				}
 			case FarmingTools.Tool.PlantingTool:
 				{
 					m_crop.PlantCrop(context.m_inventoryItem.m_cropType);
 					DryGound();
-					break;
+					return InteractionResult.Success();
 				}
-			default:
-				break;
 		}
+
+		return InteractionResult.Failure();
 	}
 
 	public bool CanUseTool(FarmingTools.Tool tool)

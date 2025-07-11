@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using static CropData;
 
 [ExecuteInEditMode]
@@ -204,20 +203,22 @@ public class Crop : MonoBehaviour
 		ChangeCropType(type);
 	}
 
-	public void Interact(FarmingTools.Tool tool)
+	public InteractionResult Interact(FarmingTools.Tool tool)
 	{
 		if (!HasAnythingPlanted())
-			return;
-
-		if (m_runtime.IsTimerEnabled())
-			return;
+			return InteractionResult.Failure();
 
 		CropData cropData = GetCropData();
-		if (m_runtime.GetTimerProgress() == 1.0f)
+		if (m_runtime != null && m_runtime.GetTimerProgress() == 1.0f)
 		{
-			// todo harvest, rewwards, etc
+			CropInteractionResult result = CropInteractionResult.SuccessfullHarvest(m_runtime.m_data);
+
 			ChangeCropType(CropTypes.Enum.None);
+
+			return result;
 		}
+
+		return InteractionResult.Failure();
 	}
 
 	public bool HasValidInteraction(FarmingTools.Tool tool)

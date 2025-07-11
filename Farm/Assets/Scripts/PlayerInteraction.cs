@@ -41,7 +41,8 @@ public class PlayerInteraction : MonoBehaviour
 
 				if (EnsureMapGrid())
 				{
-					m_mapGrid.Interact(m_interactionContext);
+					InteractionResult result = m_mapGrid.Interact(m_interactionContext);
+					ProcessInteractionResult(result);
 					OnActiveTileChanged(m_ActiveTile);
 					Reset();
 				}
@@ -186,5 +187,25 @@ public class PlayerInteraction : MonoBehaviour
 		}
 
 		return interactionContext;
+	}
+
+	private void ProcessInteractionResult(InteractionResult interactionResult)
+	{
+		if (interactionResult == null)
+		{
+			Debug.LogError("Interaction result is null");
+			return;
+		}
+
+		if (interactionResult.m_result == false)
+		{
+			Debug.LogWarning("Interaction failed.");
+			return;
+		}
+
+		if (interactionResult is CropInteractionResult)
+		{ 
+			// add rewards to inventory
+		}
 	}
 }

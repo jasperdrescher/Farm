@@ -228,10 +228,10 @@ public class MapGrid : MonoBehaviour
 		return tile != null ? tile.HasValidInteraction(context) : false;
 	}
 
-	public void Interact(InteractionContext context)
+	public InteractionResult Interact(InteractionContext context)
 	{
 		MapTile tile = GetTileAtPos(context.m_position);
-		tile?.Interact(context);
+		return tile != null ? tile.Interact(context) : InteractionResult.Failure();
 	}
 
 	void OnDrawGizmos()
