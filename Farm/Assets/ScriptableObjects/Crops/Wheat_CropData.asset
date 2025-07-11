@@ -23,6 +23,9 @@ MonoBehaviour:
   m_harvestTool: 4
   m_seedItem: {fileID: 11400000, guid: ea59fd06ae5c0f649a839f02ecdf0b4b, type: 2}
   m_harvestRewards:
-  - m_inventoryItem: {fileID: 0}
-    m_amountMinMax: {x: 0, y: 0}
+  - m_inventoryItem: {fileID: 11400000, guid: 950482e434e2819419e4a6b314a9f605, type: 2}
+    m_amountMinMax: {x: 10, y: 20}
+    m_chance: 1
+  - m_inventoryItem: {fileID: 11400000, guid: ea59fd06ae5c0f649a839f02ecdf0b4b, type: 2}
+    m_amountMinMax: {x: 1, y: 3}
     m_chance: 1
