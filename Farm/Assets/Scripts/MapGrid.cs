@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using UnityEngine;
-using static MapTile;
-using static UnityEditor.PlayerSettings;
 
 [ExecuteInEditMode]
 public class MapGrid : MonoBehaviour
@@ -50,6 +46,9 @@ public class MapGrid : MonoBehaviour
 
 	///////////////////////////////////
 
+	// I wanted to make the grid+tile system work from editor, and Start is not executed there...
+	// MapGrid has a bool that is getting checked in Update and spawned from there
+	// Start only generates the map if it is not already done before starting the game
 	void Start()
     {
 		// if the map generation was not enabled in the editor, we spawn tiles on startup

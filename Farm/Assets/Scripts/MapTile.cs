@@ -39,6 +39,8 @@ public class MapTile : MonoBehaviour
 		public float m_timeSinceLastWatering;
 	};
 
+	// I wanted to make the grid+tile system work from editor, and Start is not executed there...
+	// That is why I use Init function that is called from the MapGrid
 	void Start()
 	{
 	}
