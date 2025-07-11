@@ -23,6 +23,8 @@ public class InventoryItem : ScriptableObject
 
 	public bool m_hideInInventory = false;
 
+	public Sprite m_thumbnail;
+
 	public bool IsVisibleInInventory()
 	{
 		return !m_hideInInventory && m_itemType != Type.Currency && m_itemType != Type.PlayerResource;

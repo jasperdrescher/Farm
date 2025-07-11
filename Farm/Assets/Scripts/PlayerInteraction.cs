@@ -210,9 +210,8 @@ public class PlayerInteraction : MonoBehaviour
 
 		if (interactionResult is CropInteractionResult)
 		{
-			// add rewards to inventory
 			CropInteractionResult result = interactionResult as CropInteractionResult;
-			// result.m_reward;
+			m_playerInventory.AddInventoyItems(result.m_reward);
 
 			string log = "Gained: \n";
 			foreach(InventoryItem item in result.m_reward)

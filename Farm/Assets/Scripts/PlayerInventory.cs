@@ -56,7 +56,7 @@ public class PlayerInventory : MonoBehaviour
         EquipTool(FarmingTools.Tool.None);
 
         // TODO: Remove when we can pick up or load inventory items
-        m_inventoryItems.Add(m_TempDebugInventoryItem);
+        AddInventoyItem(m_TempDebugInventoryItem);
         m_cropPanel.gameObject.SetActive(false);
     }
 
@@ -129,5 +129,29 @@ public class PlayerInventory : MonoBehaviour
     public void InputToggleInventory(InputAction.CallbackContext callbackContext)
     {
         m_cropPanel.ToggleInventory();
+    }
+
+    public void AddInventoyItems(List<InventoryItem> items)
+    {
+        foreach (InventoryItem item in items)
+        {
+            AddInventoyItem(item);
+        }
+    }
+
+    public void AddInventoyItem(InventoryItem item)
+    {
+        m_inventoryItems.Contains(item);
+        foreach (InventoryItem inventoryItem in m_inventoryItems)
+        {
+            if (inventoryItem == item)
+            {
+                inventoryItem.m_amount++;
+                return;
+            }
+        }
+
+        m_inventoryItems.Add(item);
+        m_cropPanel.RefreshPanels(m_inventoryItems);
     }
 }

@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CropPanel : MonoBehaviour
 {
     public GameObject m_CropButtonPrefab;
+
+    private Dictionary<CropTypes.Enum, GameObject> m_cropButtons = new Dictionary<CropTypes.Enum, GameObject>();
 
     void Start()
     {
@@ -34,7 +37,7 @@ public class CropPanel : MonoBehaviour
         secondRowRectTransform.anchoredPosition = new Vector2(0f, -110f);
         secondRowRectTransform.sizeDelta = new Vector2(740f, 110f);
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 1; i < (int)CropTypes.Enum.Rice; i++)
         {
             GameObject cropButton = Instantiate(m_CropButtonPrefab, firstRowPanel.transform);
 
@@ -44,6 +47,8 @@ public class CropPanel : MonoBehaviour
             cropButtonRectTransform.anchorMax = new Vector2(0f, 1f);
             cropButtonRectTransform.anchoredPosition = new Vector2(5f + (105f * i), -5f);
             cropButtonRectTransform.sizeDelta = new Vector2(100f, 100f);
+
+            m_cropButtons.Add((CropTypes.Enum)i, cropButton);
         }
 
         for (int i = 0; i < 7; i++)
@@ -62,5 +67,10 @@ public class CropPanel : MonoBehaviour
     public void ToggleInventory()
     {
         gameObject.SetActive(!gameObject.activeSelf);
+    }
+
+    public void RefreshPanels(List<InventoryItem> items)
+    {
+        m_cropButtons[items[0].m_cropType].GetComponent<Image>().sprite = items[0].m_thumbnail;
     }
 }
