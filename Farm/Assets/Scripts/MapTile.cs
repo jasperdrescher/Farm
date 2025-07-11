@@ -146,9 +146,8 @@ public class MapTile : MonoBehaviour
 				}
 			case FarmingTools.Tool.PlantingTool:
 				{
-					m_crop.PlantCrop(context.m_inventoryItem);
 					DryGound();
-					return InteractionResult.Success();
+					return m_crop.PlantCrop(context.m_inventoryItem);
 				}
 		}
 

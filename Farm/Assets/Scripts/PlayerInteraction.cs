@@ -208,12 +208,26 @@ public class PlayerInteraction : MonoBehaviour
 			// add rewards to inventory
 			CropInteractionResult result = interactionResult as CropInteractionResult;
 			// result.m_reward;
+
+			string log = "Gained: \n";
+			foreach(InventoryItem item in result.m_reward)
+			{
+				log += new string(item.m_itemType + " (" + item.m_cropType + "): " + item.m_amount + "\n");
+			}
+			Debug.Log(log);
 		}
 		else if (interactionResult is TileInteractionResult)
 		{
 			// remove items from inventory
 			TileInteractionResult result = interactionResult as TileInteractionResult;
 			// result.m_consumed
+
+			string log = "Consumed: \n";
+			foreach (InventoryItem item in result.m_consumed)
+			{
+				log += new string(item.m_itemType + " (" + item.m_cropType + "): " + item.m_amount + "\n");
+			}
+			Debug.Log(log);
 		}
 	}
 }
