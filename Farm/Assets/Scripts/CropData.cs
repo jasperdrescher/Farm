@@ -9,6 +9,7 @@ public class CropData : ScriptableObject
 	public GameObject[] m_steps;
 	[Min(0f)] public float m_growTime;
 	public FarmingTools.Tool m_harvestTool;
+	public InventoryItem m_seedItem = null;
 
 	[System.Serializable]
 	public class HarvestRewards
@@ -20,10 +21,7 @@ public class CropData : ScriptableObject
 
 	public HarvestRewards[] m_harvestRewards;
 
-	public int GetStepCount()
-	{ 
-		return m_steps.Length;
-	}
+	
 
 	public int GetLastStepIndex()
 	{

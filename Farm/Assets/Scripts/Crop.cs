@@ -195,15 +195,26 @@ public class Crop : MonoBehaviour
 		return m_currentCropType != CropTypes.Enum.None;
 	}
 
-	public void PlantCrop(CropTypes.Enum type)
+	public InteractionResult PlantCrop(InventoryItem inventoryItem)
 	{
 		if (HasAnythingPlanted())
-			return;
+			return TileInteractionResult.Failure();
 
-		ChangeCropType(type);
+		if (inventoryItem.m_itemType != InventoryItem.Type.Seed)
+			return TileInteractionResult.Failure();
+
+		ChangeCropType(inventoryItem.m_cropType);
+
+		if (m_runtime == null || m_runtime.m_data == null)
+		{
+			Debug.Log("Something off with planted crop...");
+			return TileInteractionResult.Success();
+		}
+
+		return TileInteractionResult.SuccessWithConsume(m_runtime.m_data.m_seedItem);
 	}
 
-	public InteractionResult Interact(FarmingTools.Tool tool)
+	public InteractionResult Interact(InteractionContext context)
 	{
 		if (!HasAnythingPlanted())
 			return InteractionResult.Failure();
@@ -221,15 +232,36 @@ public class Crop : MonoBehaviour
 		return InteractionResult.Failure();
 	}
 
-	public bool HasValidInteraction(FarmingTools.Tool tool)
+	public bool CanUseTool(FarmingTools.Tool tool)
 	{
-		if (!HasAnythingPlanted())
-			return false;
+		if (!HasAnythingPlanted() && tool == FarmingTools.Tool.PlantingTool)
+			return true;
 
 		if (m_runtime != null && m_runtime.GetTimerProgress() == 1.0f)
 		{
 			FarmingTools.Tool currentRequiredTool = m_runtime.m_data.m_harvestTool;
 			return tool == currentRequiredTool;
+		}
+
+		return false;
+	}
+
+	public bool HasValidInteraction(InteractionContext context)
+	{
+		if (HasAnythingPlanted())
+		{
+			if (m_runtime != null && m_runtime.GetTimerProgress() == 1.0f)
+			{
+				FarmingTools.Tool currentRequiredTool = m_runtime.m_data.m_harvestTool;
+				return context.m_tool == currentRequiredTool;
+			}
+		}
+		else
+		{
+			if (context.m_tool == FarmingTools.Tool.PlantingTool)
+			{
+				return context.m_inventoryItem.m_itemType == InventoryItem.Type.Seed;
+			}
 		}
 
 		return false;

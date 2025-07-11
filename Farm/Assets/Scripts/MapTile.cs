@@ -138,7 +138,7 @@ public class MapTile : MonoBehaviour
 				}
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Sickle:
-					return m_crop.Interact(context.m_tool);
+					return m_crop.Interact(context);
 			case FarmingTools.Tool.WateringPot:
 				{
 					WaterGround();
@@ -146,7 +146,7 @@ public class MapTile : MonoBehaviour
 				}
 			case FarmingTools.Tool.PlantingTool:
 				{
-					m_crop.PlantCrop(context.m_inventoryItem.m_cropType);
+					m_crop.PlantCrop(context.m_inventoryItem);
 					DryGound();
 					return InteractionResult.Success();
 				}
@@ -163,11 +163,11 @@ public class MapTile : MonoBehaviour
 				return m_currentTileType == TileTypes.Enum.Grass;
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Sickle:
-				return m_crop != null && m_crop.HasValidInteraction(tool);
+				return m_crop != null && m_crop.CanUseTool(tool);
 			case FarmingTools.Tool.WateringPot:
 				return m_crop != null && m_crop.HasAnythingPlanted() && CanWaterGround();
 			case FarmingTools.Tool.PlantingTool:
-				return m_currentTileType == TileTypes.Enum.FarmField && m_crop && !m_crop.HasAnythingPlanted();
+				return m_currentTileType == TileTypes.Enum.FarmField && m_crop != null && !m_crop.HasAnythingPlanted();
 			default:
 				break;
 		}
@@ -179,9 +179,20 @@ public class MapTile : MonoBehaviour
 	{
 		if (context != null)
 		{
-			// todo: check if inventory item is a seed in context, has enough, etc...
-
-			return CanUseTool(context.m_tool);
+			switch (context.m_tool)
+			{
+				case FarmingTools.Tool.Shovel:
+					return m_currentTileType == TileTypes.Enum.Grass;
+				case FarmingTools.Tool.Hoe:
+				case FarmingTools.Tool.Sickle:
+					return m_crop != null && m_crop.HasValidInteraction(context);
+				case FarmingTools.Tool.WateringPot:
+					return m_crop != null && m_crop.HasAnythingPlanted() && CanWaterGround();
+				case FarmingTools.Tool.PlantingTool:
+					return m_currentTileType == TileTypes.Enum.FarmField && m_crop && !m_crop.HasAnythingPlanted();
+				default:
+					break;
+			}
 		}
 
 		return false;
