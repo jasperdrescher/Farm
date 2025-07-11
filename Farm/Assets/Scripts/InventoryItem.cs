@@ -22,9 +22,7 @@ public class InventoryItem : ScriptableObject
 	public GameObject m_gameObjectPrefab;
 
 	public bool m_hideInInventory = false;
-	public bool m_stackable = true;
-
-	// todo: max stack size?
+	public int m_maxStackSize = 0; // <=0 unlimited, 1=non stackable, other: stack size
 
 	public Sprite m_thumbnail;
 
@@ -35,7 +33,7 @@ public class InventoryItem : ScriptableObject
 
 	public bool IsStackable()
 	{ 
-		return m_stackable;
+		return m_maxStackSize != 1;
 	}
 
 	public bool IsSameItem(InventoryItem otherItem)
@@ -48,11 +46,46 @@ public class InventoryItem : ScriptableObject
 		return IsStackable() && IsSameItem(otherItem);
 	}
 
-	public void StackItem(InventoryItem otherItem)
+	// return value: false, if item is fully stacked and no need to keep it.
+	// false: you have to keep the input item, because it was not stacked or partially (amount modified)
+	public bool StackItem(ref InventoryItem otherItem)
 	{
 		if (!CanStackWith(otherItem))
-			return;
+			return true;
 
-		m_amount += otherItem.m_amount;
+		if (m_maxStackSize < 1)
+		{
+			m_amount += otherItem.m_amount;
+			return false;
+		}
+		else
+		{
+			// assuming that m_amount is not already greater then the max stack size...
+			if (m_amount > m_maxStackSize)
+			{
+				Debug.LogWarning("Inventory item ("+m_itemType+") exceeds the max stack size... you will loose some items...");
+			}
+
+			int sum = m_amount + otherItem.m_amount;
+			int remainder = sum - Mathf.Min(sum, m_maxStackSize);
+			otherItem.m_amount = Mathf.Min(remainder, m_maxStackSize);
+
+			return true;
+		}
+	}
+
+	// return value will be null if item count <= 1
+	// otherwise you have to store the new item
+	public InventoryItem SplitStack()
+	{
+		if (m_amount <= 1)
+			return null;
+
+		int amount = Mathf.FloorToInt(m_amount / 2.0f);
+		m_amount -= amount;
+
+		InventoryItem item = ScriptableObject.Instantiate(this) as InventoryItem;
+		item.m_amount = amount;
+		return item;
 	}
 }
