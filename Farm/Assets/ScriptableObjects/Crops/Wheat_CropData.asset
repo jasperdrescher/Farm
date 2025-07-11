@@ -21,6 +21,7 @@ MonoBehaviour:
   - {fileID: 1922951382387658844, guid: 2b43b456585f1da45b4898b7d512ddf1, type: 3}
   m_growTime: 600
   m_harvestTool: 4
+  m_seedItem: {fileID: 11400000, guid: ea59fd06ae5c0f649a839f02ecdf0b4b, type: 2}
   m_harvestRewards:
   - m_inventoryItem: {fileID: 0}
     m_amountMinMax: {x: 0, y: 0}

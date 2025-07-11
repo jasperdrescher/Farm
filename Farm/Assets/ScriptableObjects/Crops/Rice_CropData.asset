@@ -21,4 +21,5 @@ MonoBehaviour:
   - {fileID: 7765417763508016031, guid: c103538c1c1540142ac2547d78a5c48a, type: 3}
   m_growTime: 600
   m_harvestTool: 4
+  m_seedItem: {fileID: 11400000, guid: aae27512828bac0429d60782bd2c79d4, type: 2}
   m_harvestRewards: []
