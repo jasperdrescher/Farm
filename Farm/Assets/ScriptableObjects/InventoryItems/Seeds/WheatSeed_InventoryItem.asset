@@ -18,3 +18,4 @@ MonoBehaviour:
   m_resourceType: 0
   m_gameObjectPrefab: {fileID: 0}
   m_hideInInventory: 0
+  m_thumbnail: {fileID: 21300000, guid: 5e79177a4b61cbe4bb679500cd5d7157, type: 3}
