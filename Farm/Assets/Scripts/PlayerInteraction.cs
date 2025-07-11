@@ -204,8 +204,16 @@ public class PlayerInteraction : MonoBehaviour
 		}
 
 		if (interactionResult is CropInteractionResult)
-		{ 
+		{
 			// add rewards to inventory
+			CropInteractionResult result = interactionResult as CropInteractionResult;
+			// result.m_reward;
+		}
+		else if (interactionResult is TileInteractionResult)
+		{
+			// remove items from inventory
+			TileInteractionResult result = interactionResult as TileInteractionResult;
+			// result.m_consumed
 		}
 	}
 }
