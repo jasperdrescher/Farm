@@ -54,7 +54,10 @@ MonoBehaviour:
   m_cropPrefab: {fileID: 3172157940837972674, guid: ff632a95313adb544b03c74c56bfa2cc, type: 3}
   m_groundDryTime: 120
   m_DryStages: 050000000400000003000000
+  m_minimumWateringTreshold: 0.8
+  m_WaterInventoryItem: {fileID: 11400000, guid: face6510a03c20d4fad7995a6b02d00b, type: 2}
   m_editorTileTypeChanger: 0
+  m_debug_ground_wetness: 0
 --- !u!65 &1180436350199222392
 BoxCollider:
   m_ObjectHideFlags: 0

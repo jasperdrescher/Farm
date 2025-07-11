@@ -167,12 +167,18 @@ public class PlayerInteraction : MonoBehaviour
 
 		switch (interactionContext.m_tool)
 		{
-			case FarmingTools.Tool.None:
-				break;
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Shovel:
-			case FarmingTools.Tool.WateringPot: // we could add water item to the player, so the bucket have to be refilled
 			case FarmingTools.Tool.Sickle:
+				break;
+			case FarmingTools.Tool.WateringPot:
+				{
+					/*todo, use real inventory items from player inventory*/
+					interactionContext.m_inventoryItem = ScriptableObject.CreateInstance<InventoryItem>();
+					interactionContext.m_inventoryItem.m_itemType = InventoryItem.Type.Resource;
+					interactionContext.m_inventoryItem.m_resourceType = ResourceTypes.Enum.Water;
+					interactionContext.m_inventoryItem.m_amount = 10000; // add how much water we have
+				}
 				break;
 			case FarmingTools.Tool.PlantingTool:
 				{
@@ -180,9 +186,8 @@ public class PlayerInteraction : MonoBehaviour
 					interactionContext.m_inventoryItem = ScriptableObject.CreateInstance<InventoryItem>();
 					interactionContext.m_inventoryItem.m_itemType = InventoryItem.Type.Seed;
 					interactionContext.m_inventoryItem.m_cropType = CropTypes.Enum.Potato;
+					interactionContext.m_inventoryItem.m_amount = 10000; // add how many seeds we have
 				}
-				break;
-			default:
 				break;
 		}
 
@@ -212,7 +217,7 @@ public class PlayerInteraction : MonoBehaviour
 			string log = "Gained: \n";
 			foreach(InventoryItem item in result.m_reward)
 			{
-				log += new string(item.m_itemType + " (" + item.m_cropType + "): " + item.m_amount + "\n");
+				log += DebugLogItem(item);
 			}
 			Debug.Log(log);
 		}
@@ -225,9 +230,25 @@ public class PlayerInteraction : MonoBehaviour
 			string log = "Consumed: \n";
 			foreach (InventoryItem item in result.m_consumed)
 			{
-				log += new string(item.m_itemType + " (" + item.m_cropType + "): " + item.m_amount + "\n");
+				log += DebugLogItem(item);
 			}
 			Debug.Log(log);
 		}
+	}
+
+	string DebugLogItem(InventoryItem item)
+	{
+		switch (item.m_itemType)
+		{
+			case InventoryItem.Type.Seed:
+			case InventoryItem.Type.Crop:
+				return new string(item.m_itemType + " (" + item.m_cropType + "): " + item.m_amount + "\n");
+			case InventoryItem.Type.Resource:
+			case InventoryItem.Type.Currency:
+			case InventoryItem.Type.PlayerResource:
+				return new string(item.m_itemType + " (" + item.m_resourceType + "): " + item.m_amount + "\n");
+		}
+
+		return "";
 	}
 }

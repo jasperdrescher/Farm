@@ -13,6 +13,8 @@ public class MapTile : MonoBehaviour
 	[Min(0f)] public float m_groundDryTime = 120.0f;
 	public TileTypes.Enum[] m_DryStages;
 	[Min(0f)] public float m_minimumWateringTreshold = 0.8f;
+	public InventoryItem m_WaterInventoryItem = null;
+	public int m_waterUnitConsumptionForFullWatering = 5;
 
 	[Header("Editor")]
 	public TileTypes.Enum m_editorTileTypeChanger = TileTypes.Enum.None;
@@ -141,8 +143,7 @@ public class MapTile : MonoBehaviour
 					return m_crop.Interact(context);
 			case FarmingTools.Tool.WateringPot:
 				{
-					WaterGround();
-					return InteractionResult.Success();
+					return WaterGround();
 				}
 			case FarmingTools.Tool.PlantingTool:
 				{
@@ -270,6 +271,12 @@ public class MapTile : MonoBehaviour
 		return p;
 	}
 
+	private int GetRequiredWater()
+	{ 
+		float p = 1.0f - GetGroundWaterLevel();
+		return Mathf.CeilToInt(p * m_waterUnitConsumptionForFullWatering);
+	}
+
 	private void HandleGroundDryness()
 	{
 		if (m_crop == null || !m_crop.HasAnythingPlanted())
@@ -308,20 +315,23 @@ public class MapTile : MonoBehaviour
 		m_timeSinceLastWatering = m_groundDryTime + 1.0f;
 	}
 
-	private void WaterGround()
+	private TileInteractionResult WaterGround()
 	{
+		InventoryItem waterConsumption = ScriptableObject.Instantiate(m_WaterInventoryItem);
+		waterConsumption.m_amount = GetRequiredWater();
+		TileInteractionResult result = TileInteractionResult.SuccessWithConsume(waterConsumption);
+
 		m_timeSinceLastWatering = 0.0f;
 
 		int stages = m_DryStages.Length;
-		if (stages == 0)
-			return; // nothing to do here...
+		if (stages > 0)
+		{
+			TileTypes.Enum wetGround = m_DryStages[stages - 1];
+			if (m_currentTileType != wetGround)
+				ChangeTileType(wetGround);
+		}
 
-		TileTypes.Enum wetGround = m_DryStages[stages - 1];
-
-		if (m_currentTileType == wetGround)
-			return;
-
-		ChangeTileType(wetGround);
+		return result;
 	}
 
 	private bool CanWaterGround()
