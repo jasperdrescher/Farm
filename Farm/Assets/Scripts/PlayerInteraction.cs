@@ -15,6 +15,7 @@ public class PlayerInteraction : MonoBehaviour
 	private bool m_interacted = false;
 	private Vector3 m_playerPositionCacheForActiveTile = Vector3.zero;
 	private Animator m_animator;
+	private InteractionContext m_interactionContext = null;
 
 	void Start()
     {
@@ -40,8 +41,7 @@ public class PlayerInteraction : MonoBehaviour
 
 				if (EnsureMapGrid())
 				{
-					FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
-					m_mapGrid.Interact(tool, transform.position);
+					m_mapGrid.Interact(m_interactionContext);
 					OnActiveTileChanged(m_ActiveTile);
 					Reset();
 				}
@@ -102,6 +102,7 @@ public class PlayerInteraction : MonoBehaviour
 		m_interacted = false;
 		m_interactionTimer = 0.0f;
         m_slider.gameObject.SetActive(false);
+		m_interactionContext = null;
     }
 
 	public void InputInteract(InputAction.CallbackContext callbackContext)
@@ -114,8 +115,10 @@ public class PlayerInteraction : MonoBehaviour
 
 		if (!m_interacted && !m_interacting)
 		{
+			m_interactionContext = CreateInteractionContext();
+
 			FarmingTools.Tool tool = m_playerInventory.GetCurrentTool();
-			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(tool, transform.position))
+			if (EnsureMapGrid() && m_mapGrid.HasValidInteraction(m_interactionContext))
 			{
                 foreach (ToolData tooldata in m_playerInventory.m_toolDataObjects)
 				{
@@ -153,5 +156,35 @@ public class PlayerInteraction : MonoBehaviour
 		}
 
 		return m_mapGrid != null;
+	}
+
+	private InteractionContext CreateInteractionContext()
+	{
+		InteractionContext interactionContext = ScriptableObject.CreateInstance<InteractionContext>();
+		interactionContext.m_position = transform.position;	
+		interactionContext.m_tool = m_playerInventory.GetCurrentTool();
+
+		switch (interactionContext.m_tool)
+		{
+			case FarmingTools.Tool.None:
+				break;
+			case FarmingTools.Tool.Hoe:
+			case FarmingTools.Tool.Shovel:
+			case FarmingTools.Tool.WateringPot: // we could add water item to the player, so the bucket have to be refilled
+			case FarmingTools.Tool.Sickle:
+				break;
+			case FarmingTools.Tool.PlantingTool:
+				{
+					/*todo, use real inventory items from player inventory*/
+					interactionContext.m_inventoryItem = ScriptableObject.CreateInstance<InventoryItem>();
+					interactionContext.m_inventoryItem.m_itemType = InventoryItem.Type.Seed;
+					interactionContext.m_inventoryItem.m_cropType = CropTypes.Enum.Potato;
+				}
+				break;
+			default:
+				break;
+		}
+
+		return interactionContext;
 	}
 }

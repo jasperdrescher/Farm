@@ -39,7 +39,7 @@ public class InventoryPanel : MonoBehaviour
             if (pair.Key == m_currentActiveTool)
                 continue;
 
-            if (mapTile.HasValidInteraction(pair.Key))
+            if (mapTile.CanUseTool(pair.Key))
             {
                 pair.Value.GetComponent<Image>().color = Color.green;
             }

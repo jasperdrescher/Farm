@@ -124,26 +124,26 @@ public class MapTile : MonoBehaviour
 	}
 
 	// todo: add an enum value as parameter for the current used tool
-	public void Interact(FarmingTools.Tool tool)
+	public void Interact(InteractionContext context)
 	{
-		if (!HasValidInteraction(tool))
+		if (!HasValidInteraction(context))
 			return;
 
-		switch (tool)
+		switch (context.m_tool)
 		{
 			case FarmingTools.Tool.Shovel:
 				ChangeTileType(TileTypes.Enum.FarmField);
 				break;
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Sickle:
-				m_crop.Interact(tool);
+				m_crop.Interact(context.m_tool);
 				break;
 			case FarmingTools.Tool.WateringPot:
 				WaterGround();
 				break;
 			case FarmingTools.Tool.PlantingTool:
 				{
-					m_crop.PlantCrop(CropTypes.Enum.Potato); // [FIXME] selectable crop type
+					m_crop.PlantCrop(context.m_inventoryItem.m_cropType);
 					DryGound();
 					break;
 				}
@@ -152,7 +152,7 @@ public class MapTile : MonoBehaviour
 		}
 	}
 
-	public bool HasValidInteraction(FarmingTools.Tool tool)
+	public bool CanUseTool(FarmingTools.Tool tool)
 	{
 		switch (tool)
 		{
@@ -167,6 +167,18 @@ public class MapTile : MonoBehaviour
 				return m_currentTileType == TileTypes.Enum.FarmField && m_crop && !m_crop.HasAnythingPlanted();
 			default:
 				break;
+		}
+
+		return false;
+	}
+
+	public bool HasValidInteraction(InteractionContext context)
+	{
+		if (context != null)
+		{
+			// todo: check if inventory item is a seed in context, has enough, etc...
+
+			return CanUseTool(context.m_tool);
 		}
 
 		return false;

@@ -222,16 +222,16 @@ public class MapGrid : MonoBehaviour
 		}
 	}
 
-	public bool HasValidInteraction(FarmingTools.Tool tool, Vector3 interactionPosition)
+	public bool HasValidInteraction(InteractionContext context)
 	{
-		MapTile tile = GetTileAtPos(interactionPosition);
-		return tile != null ? tile.HasValidInteraction(tool) : false;
+		MapTile tile = GetTileAtPos(context.m_position);
+		return tile != null ? tile.HasValidInteraction(context) : false;
 	}
 
-	public void Interact(FarmingTools.Tool tool, Vector3 interactionPosition)
+	public void Interact(InteractionContext context)
 	{
-		MapTile tile = GetTileAtPos(interactionPosition);
-		tile?.Interact(tool);
+		MapTile tile = GetTileAtPos(context.m_position);
+		tile?.Interact(context);
 	}
 
 	void OnDrawGizmos()
