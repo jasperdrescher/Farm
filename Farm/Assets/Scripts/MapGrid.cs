@@ -15,16 +15,17 @@ public class MapGrid : MonoBehaviour
 	public Texture2D m_mapAsset;
 
 	[System.Serializable]
-	public class MapAssetColorTilePairs // todo: rename, it is not just a pair anymore
+	public class MapAssetColorTileDefinitions
 	{
 		public Color m_pixelColor = Color.white;
 		public TileTypes.Enum m_tileType = TileTypes.Enum.None;
 		public CropTypes.Enum m_cropType = CropTypes.Enum.None;
 		public float m_cropProgress = 1.0f;
+		public bool m_blocked = false;
 	}
 
 	public TileTypes.Enum m_defaultTileType;
-	public MapAssetColorTilePairs[] m_mapAssetColorTileAssignment;
+	public MapAssetColorTileDefinitions[] m_mapAssetColorTileAssignment;
 
 	[Header("Editor")]
 	public bool m_editorGenerateGrid = false;
@@ -112,7 +113,7 @@ public class MapGrid : MonoBehaviour
 
 	private TileTypes.Enum GetTileTypeForColor(Color c)
 	{
-		foreach (MapAssetColorTilePairs cttp in m_mapAssetColorTileAssignment)
+		foreach (MapAssetColorTileDefinitions cttp in m_mapAssetColorTileAssignment)
 		{
 			if (cttp.m_pixelColor == c)
 				return cttp.m_tileType;
@@ -121,15 +122,15 @@ public class MapGrid : MonoBehaviour
 		return m_defaultTileType;
 	}
 
-	private MapAssetColorTilePairs GetColorEncodedData(Color c)
+	private MapAssetColorTileDefinitions GetColorEncodedData(Color c)
 	{
-		foreach (MapAssetColorTilePairs cttp in m_mapAssetColorTileAssignment)
+		foreach (MapAssetColorTileDefinitions cttp in m_mapAssetColorTileAssignment)
 		{
 			if (cttp.m_pixelColor == c)
 				return cttp;
 		}
 
-		return new MapAssetColorTilePairs();
+		return new MapAssetColorTileDefinitions();
 	}
 
 	public void GenerateGrid()
@@ -167,7 +168,7 @@ public class MapGrid : MonoBehaviour
 
 				if (!loadSave)
 				{
-					MapAssetColorTilePairs cced = GetColorEncodedData(c);
+					MapAssetColorTileDefinitions cced = GetColorEncodedData(c);
 					if (cced.m_tileType != TileTypes.Enum.None)
 					{
 						if (cced.m_cropType != CropTypes.Enum.None)

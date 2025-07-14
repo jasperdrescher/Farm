@@ -29,6 +29,7 @@ public class MapTile : MonoBehaviour
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
 	private int m_index = 0;
+	private bool m_walkable = true;
 	private float m_timeSinceLastWatering = 0;
 	#endregion
 
@@ -128,6 +129,17 @@ public class MapTile : MonoBehaviour
 				m_cropGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
 		}
 
+		SetWalkable(GetTileData().m_blockerTile == false);
+	}
+
+	public void SetWalkable(bool value)
+	{ 
+		m_walkable = value;
+		UpdateWalkability();
+	}
+
+	void UpdateWalkability()
+	{
 		BoxCollider collider = GetComponent<BoxCollider>();
 		if (collider)
 			collider.center = GetTileData().m_blockerTile ? m_blockerTileBoxCollisionOffset : m_walkableTileBoxCollisionOffset;
