@@ -143,9 +143,10 @@ public class MapTile : MonoBehaviour
 				m_cropGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
 			}
 
-			if (m_decorGameObject != null)
+			if (m_decorGameObject != null && m_tileDecor)
 			{
 				m_decorGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
+				m_tileDecor.SetBasePos(m_decorGameObject.transform.position);
 			}
 		}
 

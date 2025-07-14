@@ -46,3 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_decorDatas:
   - {fileID: 11400000, guid: 41e0a9f4dc36f814091f86a5bc6dde90, type: 2}
+  - {fileID: 11400000, guid: 121eab829ac8ca248a6018ba4f44292b, type: 2}
+  m_editorDecorChanger: 0
+  m_editorVariationIndexChanger: 0

@@ -10,18 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76f00a3daa9fe7744a16479cd04e9f01, type: 3}
-  m_Name: Fence_B_TileDecorData
+  m_Name: Bridge_TileDecorData
   m_EditorClassIdentifier: 
-  m_type: 1
-  m_name: Fence
-  m_gameObject: {fileID: 7574735258565705054, guid: e955a95118151d044b58a24c6730c1fd, type: 3}
+  m_type: 4
+  m_name: Bridge
+  m_gameObject: {fileID: 4656485703296662057, guid: ae5d94d91205ad94ebe868ec5846d9ab, type: 3}
   m_transformVariations:
-  - m_offset: {x: 0, y: 0, z: 0}
+  - m_offset: {x: 0, y: -1.8, z: 0}
     m_rotation: {x: 0, y: 0, z: 0}
-  - m_offset: {x: 0, y: 0, z: 0}
+  - m_offset: {x: 0, y: -1.8, z: 0}
     m_rotation: {x: 0, y: 90, z: 0}
-  - m_offset: {x: 0, y: 0, z: 0}
-    m_rotation: {x: 0, y: 180, z: 0}
-  - m_offset: {x: 0, y: 0, z: 0}
-    m_rotation: {x: 0, y: 270, z: 0}
   m_tileWalkability: 1
+  m_canCoexistWithCrop: 0

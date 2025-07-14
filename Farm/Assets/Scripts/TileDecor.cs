@@ -19,6 +19,7 @@ public class TileDecor : MonoBehaviour
 	private TileDecorTypes.Enum m_currentDecor;
 	private int m_currentVariationIndex;
 	private Dictionary<TileDecorTypes.Enum, GameObject> m_visuals = new Dictionary<TileDecorTypes.Enum, GameObject>();
+	private Vector3 m_basePos;
 	#endregion
 
 	void Start()
@@ -52,6 +53,11 @@ public class TileDecor : MonoBehaviour
 	{ 
 		m_ownerTile = OwnerTile;
 		CreateDecorTypes();
+	}
+
+	public void SetBasePos(Vector3 pos)
+	{ 
+		m_basePos = pos;
 	}
 
 	void CreateDecorTypes()
@@ -91,7 +97,7 @@ public class TileDecor : MonoBehaviour
 		TileDecorData.TransformVariations variation = decorData.GetVariation(index);
 
 		transform.rotation = Quaternion.Euler(variation.m_rotation);
-		// todo: offset
+		transform.position = m_basePos + variation.m_offset;
 
 		m_editorVariationIndexChanger = index;
 		m_currentVariationIndex = index;
