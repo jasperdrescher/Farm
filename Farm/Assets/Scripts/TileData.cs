@@ -6,4 +6,5 @@ public class TileData : ScriptableObject
 	public TileTypes.Enum m_tileType = TileTypes.Enum.None;
 	public GameObject m_prefab;
 	public float m_tileHeight = 2.0f;
+	public bool m_blockerTile = false;
 }

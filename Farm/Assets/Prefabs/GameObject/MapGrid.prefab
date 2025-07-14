@@ -53,17 +53,23 @@ MonoBehaviour:
   - m_pixelColor: {r: 0, g: 0, b: 0, a: 1}
     m_tileType: 2
     m_cropType: 0
-    m_cropStep: 0
+    m_cropProgress: 1
   - m_pixelColor: {r: 0, g: 1, b: 0, a: 1}
     m_tileType: 2
     m_cropType: 7
-    m_cropStep: 3
+    m_cropProgress: 1
   - m_pixelColor: {r: 1, g: 0, b: 0, a: 1}
     m_tileType: 2
     m_cropType: 6
-    m_cropStep: 3
+    m_cropProgress: 1
   - m_pixelColor: {r: 0, g: 0, b: 1, a: 1}
+    m_tileType: 6
+    m_cropType: 0
+    m_cropProgress: 0
+  - m_pixelColor: {r: 1, g: 0.9490196, b: 0, a: 1}
     m_tileType: 2
     m_cropType: 1
-    m_cropStep: 3
+    m_cropProgress: 1
   m_editorGenerateGrid: 0
+  m_save: 0
+  m_load: 0

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteInEditMode]
 public class MapGrid : MonoBehaviour
@@ -211,6 +213,34 @@ public class MapGrid : MonoBehaviour
 	{ 
 		int idx = GetIndexForGridPosition(GetGridPosFromWorldPos(worldPos));
 		return (idx < m_tiles.Length && idx >= 0) ? m_tiles[idx] : null;
+	}
+
+	public List<MapTile> GetSurroundingTiles(MapTile tile)
+	{
+		List<MapTile> result = new List<MapTile>();
+
+		if (tile != null)
+		{
+			Vector2 currGridPos = GetGridPosFromWorldPos(tile.transform.position);
+
+			for (int i = (int)(currGridPos.x - 1); i <= (int)(currGridPos.x + 1); i++)
+			{
+				if (i < 0)
+					continue;
+
+				for (int j = (int)(currGridPos.y - 1); j <= (int)(currGridPos.y + 1); j++)
+				{
+					if (j < 0)
+						continue;
+
+					int idx = GetIndexForGridPosition(new Vector2(i, j));
+					if(idx >= 0 )
+						result.Add(m_tiles[idx]);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	public void Cleanup()

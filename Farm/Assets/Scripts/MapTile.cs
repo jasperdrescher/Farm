@@ -8,6 +8,8 @@ public class MapTile : MonoBehaviour
 	[Header("Global Setup")]
 	public List<TileData> m_tileTypes;
 	public GameObject m_cropPrefab;
+	public Vector3 m_walkableTileBoxCollisionOffset = new Vector3(0, 1, 0);
+	public Vector3 m_blockerTileBoxCollisionOffset = new Vector3(0, 3, 0);
 
 	[Header("Tile Config")]
 	[Min(0f)] public float m_groundDryTime = 120.0f;
@@ -69,17 +71,17 @@ public class MapTile : MonoBehaviour
 
 			go.name = tileData.m_tileType.ToString();
 
+			// make sure mesh renderer's shadow casting is off
 			MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
 			if (meshRenderer != null)
 				meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-			// make sure mesh renderer's shadow casting is off
 			// we also have a box collider on the main prefab, so no need for them on the sub objects
 			BoxCollider boxCollider = go.GetComponent<BoxCollider>();
 			if (boxCollider != null)
 				boxCollider.enabled = false;
 
-			m_spawnedTiles.Add(tileData.m_tileType, go);	
+			m_spawnedTiles.Add(tileData.m_tileType, go);
 		}
 	}
 
@@ -90,8 +92,8 @@ public class MapTile : MonoBehaviour
 		m_crop.Init(this);
 	}
 
-    void Update()
-    {
+	void Update()
+	{
 #if UNITY_EDITOR
 		EditorCheckValueChanges();
 		m_debug_ground_wetness = GetGroundWaterLevel();
@@ -112,7 +114,7 @@ public class MapTile : MonoBehaviour
 
 	void ChangeTileType(TileTypes.Enum NewTileType)
 	{
-		if(m_currentTileType != TileTypes.Enum.None)
+		if (m_currentTileType != TileTypes.Enum.None)
 			m_spawnedTiles[m_currentTileType].SetActive(false);
 
 		m_currentTileType = NewTileType;
@@ -125,6 +127,10 @@ public class MapTile : MonoBehaviour
 			if (m_cropGameObject)
 				m_cropGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
 		}
+
+		BoxCollider collider = GetComponent<BoxCollider>();
+		if (collider)
+			collider.center = GetTileData().m_blockerTile ? m_blockerTileBoxCollisionOffset : m_walkableTileBoxCollisionOffset;
 	}
 
 	// todo: add an enum value as parameter for the current used tool
@@ -142,7 +148,7 @@ public class MapTile : MonoBehaviour
 				}
 			case FarmingTools.Tool.Hoe:
 			case FarmingTools.Tool.Sickle:
-					return m_crop.Interact(context);
+				return m_crop.Interact(context);
 			case FarmingTools.Tool.WateringPot:
 				{
 					return WaterGround();
@@ -205,16 +211,21 @@ public class MapTile : MonoBehaviour
 		return m_index;
 	}
 
-	public float GetTileHeight()
+	private TileData GetTileData()
 	{
-		/*
 		foreach (TileData tileData in m_tileTypes)
 		{
 			if (tileData.m_tileType == m_currentTileType)
-				return tileData.m_tileHeight;
+				return tileData;
 		}
-		*/
 
+		return null;
+	}
+
+	public float GetTileHeight()
+	{
+		// for some reason, this not works...
+		// return GetTileData().m_tileHeight;
 		return 2.0f;
 	}
 

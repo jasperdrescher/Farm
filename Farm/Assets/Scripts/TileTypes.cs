@@ -8,5 +8,6 @@ namespace TileTypes
 		WetGround,
 		HalfWetGround,
 		DryGround,
+		Water,
 	}
 }

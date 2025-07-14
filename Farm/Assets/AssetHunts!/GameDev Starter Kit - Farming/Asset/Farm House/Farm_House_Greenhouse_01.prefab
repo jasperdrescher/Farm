@@ -61,11 +61,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fa6c45465cde56c4495f6d9109c80326, type: 2}
     - target: {fileID: -7511558181221131132, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: fa6c45465cde56c4495f6d9109c80326, type: 2}
     - target: {fileID: 919132149155446097, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
@@ -75,5 +75,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1836396054024834340}
   m_SourcePrefab: {fileID: 100100000, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
+--- !u!1 &3635945883748793187 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f0e1c87f416ed2a4faaf6c44a107be79, type: 3}
+  m_PrefabInstance: {fileID: 4518254285622789682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1836396054024834340
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3635945883748793187}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 9.531921, y: 5.5378633, z: 13.522408}
+  m_Center: {x: -0.00006866455, y: 2.7689316, z: -0.03786874}

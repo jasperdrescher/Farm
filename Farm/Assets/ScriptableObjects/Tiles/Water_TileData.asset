@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b3de848c3798c64288c8555280cdede, type: 3}
+  m_Name: Water_TileData
+  m_EditorClassIdentifier: 
+  m_tileType: 6
+  m_prefab: {fileID: 8012538876127471559, guid: e5ae0d6c5d3c6db4ebb64f1794ff6b0b, type: 3}
+  m_tileHeight: 2
+  m_blockerTile: 1
