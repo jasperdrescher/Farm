@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,10 @@ public class CropPanel : MonoBehaviour
 {
     public GameObject m_CropButtonPrefab;
 
-    private Dictionary<CropTypes.Enum, GameObject> m_cropButtons = new Dictionary<CropTypes.Enum, GameObject>();
+    [SerializeField]
+    private Sprite DebugSprite;
+
+    private List<GameObject> m_cropButtons = new List<GameObject>();
 
     void Start()
     {
@@ -48,7 +52,9 @@ public class CropPanel : MonoBehaviour
             cropButtonRectTransform.anchoredPosition = new Vector2(5f + (105f * i), -5f);
             cropButtonRectTransform.sizeDelta = new Vector2(100f, 100f);
 
-            m_cropButtons.Add((CropTypes.Enum)i, cropButton);
+            cropButton.GetComponentInChildren<Image>().color = new Color(1f, 1f, 1f, 0f);
+
+            m_cropButtons.Add(cropButton);
         }
 
         for (int i = 0; i < 7; i++)
@@ -71,6 +77,26 @@ public class CropPanel : MonoBehaviour
 
     public void RefreshPanels(List<InventoryItem> items)
     {
-        m_cropButtons[items[0].m_cropType].GetComponent<Image>().sprite = items[0].m_thumbnail;
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (i > m_cropButtons.Count)
+            {
+                Debug.LogWarning("More inventory items than inventory slots!");
+                continue;
+            }
+
+            if (items[i].m_thumbnail == null)
+            {
+                m_cropButtons[i].GetComponentInChildren<Image>().sprite = DebugSprite;
+            }
+            else
+            {
+                m_cropButtons[i].GetComponentInChildren<Image>().sprite = items[i].m_thumbnail;
+            }
+
+            m_cropButtons[i].GetComponentInChildren<Image>().color = Color.white;
+
+            m_cropButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = items[i].m_amount.ToString();
+        }
     }
 }
