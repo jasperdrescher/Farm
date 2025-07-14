@@ -28,6 +28,7 @@ public class MapTile : MonoBehaviour
 	private Crop m_crop = null;
 	private TileDecor m_tileDecor = null;
 	private GameObject m_cropGameObject = null;
+	private GameObject m_decorGameObject = null;
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
 	private int m_index = 0;
@@ -55,8 +56,11 @@ public class MapTile : MonoBehaviour
 		m_index = index;
 		m_ownerGrid = owner;
 		m_timeSinceLastWatering = m_groundDryTime;
+
 		CreateTileTypes();
+
 		CreateCrop();
+		CreateDecor();
 
 		ChangeTileType(type);
 		m_editorTileTypeChanger = type;
@@ -95,6 +99,13 @@ public class MapTile : MonoBehaviour
 		m_crop.Init(this);
 	}
 
+	private void CreateDecor()
+	{ 
+		m_decorGameObject = Instantiate(m_tileDecorPrefab, transform);
+		m_tileDecor = m_decorGameObject.GetComponent<TileDecor>();
+		m_tileDecor.Init(this);
+	}
+
 	void Update()
 	{
 #if UNITY_EDITOR
@@ -127,8 +138,15 @@ public class MapTile : MonoBehaviour
 		{
 			m_spawnedTiles[m_currentTileType].SetActive(true);
 
-			if (m_cropGameObject)
+			if (m_cropGameObject != null)
+			{
 				m_cropGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
+			}
+
+			if (m_decorGameObject != null)
+			{
+				m_decorGameObject.transform.position = transform.position + new Vector3(0.0f, GetTileHeight(), 0.0f);
+			}
 		}
 
 		SetWalkable(GetTileData().m_blockerTile == false);
@@ -253,6 +271,15 @@ public class MapTile : MonoBehaviour
 		m_crop.ChangeCropProgress(progress);
 	}
 
+	public void OverrideDecor(TileDecorTypes.Enum type, int variationIndex)
+	{
+		if (m_tileDecor == null)
+			return;
+
+		m_tileDecor.ChangeDecorType(type);
+		m_tileDecor.ChangeVariation(variationIndex);
+	}
+
 	public bool SaveState(MapTile.SaveData data)
 	{
 		data.m_index = m_index;
@@ -364,5 +391,38 @@ public class MapTile : MonoBehaviour
 	private bool CanWaterGround()
 	{ 
 		return GetGroundWaterLevel() < m_minimumWateringTreshold;
+	}
+
+	public bool PlaceDecoration(TileDecorTypes.Enum type, int variationIndex = 0)
+	{
+		if (m_tileDecor == null || m_tileDecor.HasDecor())
+			return false;
+
+		m_tileDecor.ChangeDecorType(type);
+
+		if (variationIndex != 0)
+			m_tileDecor.ChangeVariation(variationIndex);
+
+		return true;
+	}
+
+	public bool PickupDecoration()
+	{
+		if (m_tileDecor == null || !m_tileDecor.HasDecor())
+			return false;
+
+		m_tileDecor.ChangeDecorType(TileDecorTypes.Enum.None);
+
+		return true;
+	}
+
+	public bool CycleDecorVariations(bool forward = true)
+	{
+		if (m_tileDecor == null || !m_tileDecor.HasDecor())
+			return false;
+
+		m_tileDecor.CycleVariations(forward);
+
+		return true;
 	}
 }

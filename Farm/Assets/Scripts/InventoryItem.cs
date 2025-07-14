@@ -11,6 +11,7 @@ public class InventoryItem : ScriptableObject
 		Resource, // eg.: water
 		Currency, // tbd (money)
 		PlayerResource, //tbd (stamina?)
+		TileDecoration,
 	}
 
 	public Type m_itemType = Type.None;
@@ -18,6 +19,7 @@ public class InventoryItem : ScriptableObject
 
 	public CropTypes.Enum m_cropType; // can be used for both seed and harvested crop
 	public ResourceTypes.Enum m_resourceType; // can be used for Resource, Currency, PlayerResource
+	public TileDecorTypes.Enum m_tileDecorType;
 
 	public GameObject m_gameObjectPrefab;
 

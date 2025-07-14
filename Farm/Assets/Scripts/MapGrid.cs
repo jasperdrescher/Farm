@@ -21,6 +21,8 @@ public class MapGrid : MonoBehaviour
 		public TileTypes.Enum m_tileType = TileTypes.Enum.None;
 		public CropTypes.Enum m_cropType = CropTypes.Enum.None;
 		public float m_cropProgress = 1.0f;
+		public TileDecorTypes.Enum m_decorType = TileDecorTypes.Enum.None;
+		public int m_decorVariationIndex = 0;
 		public bool m_blocked = false;
 	}
 

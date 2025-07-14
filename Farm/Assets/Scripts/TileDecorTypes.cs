@@ -6,6 +6,8 @@ namespace TileDecorTypes
 	{ 
 		None = 0,
 		Fence,
-		Scarecrow,
+		FenceCorner,
+		ScareCrow,
+		Bridge,
 	}
 }

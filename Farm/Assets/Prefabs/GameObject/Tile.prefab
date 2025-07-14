@@ -53,6 +53,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 63de1973486a35447a07cecb650f76f4, type: 2}
   - {fileID: 11400000, guid: f0bcf6768d190e64cb8cba3f0e6ba5a9, type: 2}
   m_cropPrefab: {fileID: 3172157940837972674, guid: ff632a95313adb544b03c74c56bfa2cc, type: 3}
+  m_tileDecorPrefab: {fileID: 2634641883075049321, guid: eff7faf8a94bc0c4b81268511f168aa2, type: 3}
   m_walkableTileBoxCollisionOffset: {x: 0, y: 1, z: 0}
   m_blockerTileBoxCollisionOffset: {x: 0, y: 3, z: 0}
   m_groundDryTime: 120
