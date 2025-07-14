@@ -8,6 +8,7 @@ public class MapTile : MonoBehaviour
 	[Header("Global Setup")]
 	public List<TileData> m_tileTypes;
 	public GameObject m_cropPrefab;
+	public GameObject m_tileDecorPrefab;
 	public Vector3 m_walkableTileBoxCollisionOffset = new Vector3(0, 1, 0);
 	public Vector3 m_blockerTileBoxCollisionOffset = new Vector3(0, 3, 0);
 
@@ -25,6 +26,7 @@ public class MapTile : MonoBehaviour
 	#region private
 	private MapGrid m_ownerGrid = null;
 	private Crop m_crop = null;
+	private TileDecor m_tileDecor = null;
 	private GameObject m_cropGameObject = null;
 	private TileTypes.Enum m_currentTileType = TileTypes.Enum.None;
 	private Dictionary<TileTypes.Enum, GameObject> m_spawnedTiles = new Dictionary<TileTypes.Enum, GameObject>();
